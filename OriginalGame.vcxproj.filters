@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\Input">
+      <UniqueIdentifier>{552553c1-8712-4686-82d7-b9580b2a539a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SceneManager">
+      <UniqueIdentifier>{14283c21-8711-4806-bc13-f248d3dae725}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\FrameRate">
+      <UniqueIdentifier>{4bd74140-b404-4530-a0aa-a2dd54fb3656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SoundManager">
+      <UniqueIdentifier>{966f1c00-cf95-4535-88b5-6d975ffa09ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SceneManager\Base">
+      <UniqueIdentifier>{cd0eba87-a709-4a61-bfe4-79718d21d7dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SceneManager\Title">
+      <UniqueIdentifier>{7719d1d4-a6e6-4f5d-ba80-095974ab46c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SceneManager\Clear">
+      <UniqueIdentifier>{50dafa72-0fb1-4f48-85cb-2f3677502e79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Font">
+      <UniqueIdentifier>{0166681c-0e1a-4f64-a188-800622bfccfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Collision">
+      <UniqueIdentifier>{b0d5e6b3-1d5d-4db3-835c-28c70a2158e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Debug">
+      <UniqueIdentifier>{09822c97-26e1-4bbe-b15c-fd1d5fe83d20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Time">
+      <UniqueIdentifier>{32b5c853-d8aa-4f7f-8d68-6cc7eee63ca9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\JoyPad">
+      <UniqueIdentifier>{724f9a86-a6fc-476f-81f0-1340b16d36fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SceneManager\Play">
+      <UniqueIdentifier>{5b208507-4f9d-42b6-8892-477c60f03572}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\Main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input\Input.cpp">
+      <Filter>ソース ファイル\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\FrameRate\FrameRate.cpp">
+      <Filter>ソース ファイル\FrameRate</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SoundManager\SoundManager.cpp">
+      <Filter>ソース ファイル\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SceneManager\SceneManager.cpp">
+      <Filter>ソース ファイル\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SceneManager\ScenePlay\ScenePlay.cpp">
+      <Filter>ソース ファイル\SceneManager\Play</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SceneManager\SceneTitle\SceneTitle.cpp">
+      <Filter>ソース ファイル\SceneManager\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SceneManager\SceneClear\SceneClear.cpp">
+      <Filter>ソース ファイル\SceneManager\Clear</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Font\Font.cpp">
+      <Filter>ソース ファイル\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Collision\Collision.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Debug\DebugString.cpp">
+      <Filter>ソース ファイル\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Time\Time.cpp">
+      <Filter>ソース ファイル\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\JoyPad\JoyPad.cpp">
+      <Filter>ソース ファイル\JoyPad</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Collision\CollisionManager.cpp">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\Input\Input.h">
+      <Filter>ソース ファイル\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Common.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\FrameRate\FrameRate.h">
+      <Filter>ソース ファイル\FrameRate</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\SoundManager\SoundManager.h">
+      <Filter>ソース ファイル\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\SceneManager\SceneManager.h">
+      <Filter>ソース ファイル\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\SceneManager\ScenePlay\ScenePlay.h">
+      <Filter>ソース ファイル\SceneManager\Play</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\SceneManager\SceneTitle\SceneTitle.h">
+      <Filter>ソース ファイル\SceneManager\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\SceneManager\SceneClear\SceneClear.h">
+      <Filter>ソース ファイル\SceneManager\Clear</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\SceneManager\SceneBace\SceneBace.h">
+      <Filter>ソース ファイル\SceneManager\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Font\Font.h">
+      <Filter>ソース ファイル\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Collision\Collision.h">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Debug\DebugString.h">
+      <Filter>ソース ファイル\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Time\Time.h">
+      <Filter>ソース ファイル\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\JoyPad\JoyPad.h">
+      <Filter>ソース ファイル\JoyPad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Collision\CollisionManager.h">
+      <Filter>ソース ファイル\Collision</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
