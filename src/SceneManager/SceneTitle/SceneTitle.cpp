@@ -9,6 +9,22 @@
 // ゲームやめるボタンやスタートボタンの大きさ
 constexpr int BUTTON_SIZE[2] = { 320,108 };
 
+// タイトルロゴの高さの下限
+constexpr float TITLE_Y_POS_LOWER_LIMIT = 200.0f;
+
+// タイトルロゴのジャンプ回数
+constexpr int LOGO_JUMP_NUM = 3;
+
+// タイトルロゴの重力
+constexpr float LOGO_JUMP_GRAVITY = 0.4f;
+
+// タイトルロゴのジャンプ力の高さ
+constexpr float LOGO_JUMP_POWER[LOGO_JUMP_NUM] = {
+	-10.0f,
+	-12.0f,
+	-16.0f,
+};
+
 // ボタンの位置
 constexpr int BUTTON_POS[SceneTitle::SELECTABLE_GRAPH_TYPE_NUM][2] = {
 	{HALF_SCREEN_SIZE_X - BUTTON_SIZE[0] / 2,400},
@@ -20,6 +36,12 @@ void SceneTitle::Init()
 	// フォントロード
 	Font::Load();
 	m_SelectedGraph = SELECTABLE_GRAPH_TYPE_START;
+	m_LogoPos[0] = static_cast<float>(HALF_SCREEN_SIZE_X);
+	m_LogoPos[1] = TITLE_Y_POS_LOWER_LIMIT;
+	m_isOffscreenBeen = false;
+
+	m_LogoBoundCnt = 0;
+	m_LogoYSpeed = LOGO_JUMP_POWER[m_LogoBoundCnt];
 }
 
 void SceneTitle::Step()
@@ -55,6 +77,22 @@ void SceneTitle::Step()
 		}
 	}
 
+	if (m_LogoBoundCnt < LOGO_JUMP_NUM) {
+		//m_LogoPos[0]++;
+		m_LogoPos[1] += m_LogoYSpeed;
+		m_LogoYSpeed += LOGO_JUMP_GRAVITY;
+	}
+
+	if (m_LogoPos[1] < -64) {
+		m_isOffscreenBeen = true;
+	}
+
+	if (m_LogoPos[1] > TITLE_Y_POS_LOWER_LIMIT) {
+		m_LogoPos[1] = TITLE_Y_POS_LOWER_LIMIT;
+		m_LogoBoundCnt++;
+		m_LogoYSpeed = LOGO_JUMP_POWER[m_LogoBoundCnt];
+	}
+
 	// 次ボタンでプレイへ
 	//if (Input::Conclusion(Input::Type::NEXT))
 	//	SceneBace::g_scene_ID = Play_Scene;
@@ -84,6 +122,16 @@ void SceneTitle::Draw()
 	}
 
 	// いったん文字表示
+	int logopos[2] = { static_cast<int>(m_LogoPos[0]), static_cast<int>(m_LogoPos[1]) };
+	DebugString* dbgstr = DebugString::GetInstance();
+
+	if (!m_isOffscreenBeen) {
+		dbgstr->AddFormatString(logopos[0] - 16, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%d", m_LogoBoundCnt + 1);
+	}
+	else {
+		dbgstr->AddString(logopos[0] - 16 * 5, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "Title");
+	}
+
 }
 void SceneTitle::Fin()
 {
