@@ -5,7 +5,8 @@
 //==================================================
 // 定義関連
 
-PLAYER_JUMP_POWER CPlayer::m_eJumpPower;
+// プレイヤーの画像ファイルパス
+const char PLAYER_FILE_PATH[] = { "data/Player/プレイヤー(仮).png" };
 
 // プレイヤー初期座標
 const float INIT_POS_X = (float)(SCREEN_SIZE_X / 2);
@@ -24,6 +25,7 @@ const float MAX_JUMP_Y[PLAYER_JUMP_POWER_NUM] = { 3.0f,4.0f,5.0f };
 // コンストラクタ・デストラクタ
 CPlayer::CPlayer()
 {
+	m_iHndl = -1;
 	m_eJumpPower = JUMP_POWER_1;
 	m_fPosX = 0.0f;
 	m_fPosY = 0.0f;
@@ -35,6 +37,7 @@ CPlayer::~CPlayer() {}
 // 初期化
 void CPlayer::Init()
 {
+	m_iHndl = LoadGraph(PLAYER_FILE_PATH);
 	m_fPosX = INIT_POS_X;
 	m_fPosY = INIT_POS_Y;
 	m_fSpeed = SPEED;
@@ -51,13 +54,16 @@ void CPlayer::Step()
 // 描画処理
 void CPlayer::Draw()
 {
-	DrawBox((int)m_fPosX, (int)m_fPosY, (int)(m_fPosX + PLAYER_SIZE), (int)(m_fPosY + PLAYER_SIZE), WHITE, true);
+	DrawGraph((int)m_fPosX, (int)m_fPosY, m_iHndl, true);
 	DrawLine(0, (float)SCREEN_SIZE_Y - PLAYER_SIZE, SCREEN_SIZE_X, (float)SCREEN_SIZE_Y - PLAYER_SIZE, RED);
 }
 
 // 終了処理
 void CPlayer::Fin()
 {
+	DeleteGraph(m_iHndl);
+	m_iHndl = -1;
+
 	m_fPosX = 0.0f;
 	m_fPosY = 0.0f;
 	m_fSpeed = 0.0f;
@@ -103,4 +109,14 @@ void CPlayer::Jump()
 	{
 		m_fPosY = fFloorPos;
 	}
+}
+
+// マップに当たった時
+void CPlayer::HitMapCalc_X(float iPlusorMinus)
+{
+	m_fPosX += SPEED * iPlusorMinus;
+}
+void CPlayer::HitMapCalc_Y(float iPlusorMinus)
+{
+	m_fPosY += SPEED * iPlusorMinus;
 }

@@ -14,12 +14,13 @@ const float PLAYER_SIZE = 32.0f;
 
 class CPlayer {
 private:
+	int m_iHndl;		// 画像ハンドル
 	float m_fPosX;		// X座標
 	float m_fPosY;		// Y座標
 	float m_fSpeed;		// 速度
 	float m_fYSpeed;	// Y軸加速度
 
-	static PLAYER_JUMP_POWER m_eJumpPower;
+	PLAYER_JUMP_POWER m_eJumpPower;
 
 public:
 	// コンストラクタ・デストラクタ
@@ -34,11 +35,16 @@ public:
 	//====================
 	//      　関数
 	//====================
+	
 	// 移動処理
 	void Move();
 
 	// ジャンプ処理
 	void Jump();
+
+	// マップに当たった時
+	void HitMapCalc_X(float iPlusorMinus);
+	void HitMapCalc_Y(float iPlusorMinus);
 
 	//====================
 	//   取得・設定関連
@@ -52,7 +58,7 @@ public:
 	float GetSize() { return PLAYER_SIZE; }
 
 	// プレイヤーのジャンプパワーを設定
-	static void SetJumpPower(PLAYER_JUMP_POWER JumpPower) {
+	void SetJumpPower(PLAYER_JUMP_POWER JumpPower) {
 		m_eJumpPower = JumpPower;
 	}
 };
