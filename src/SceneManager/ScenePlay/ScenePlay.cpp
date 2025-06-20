@@ -24,6 +24,8 @@ void ScenePlay::Step()
 
 	Collision();
 
+	cPlayer.Update();
+
 	// 次ボタンでクリアへ
 	if (Input::Conclusion(Input::Type::NEXT))
 		SceneBace::g_scene_ID = Clear_Scene;

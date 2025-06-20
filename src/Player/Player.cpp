@@ -29,8 +29,15 @@ CPlayer::CPlayer()
 	m_eJumpPower = JUMP_POWER_1;
 	m_fPosX = 0.0f;
 	m_fPosY = 0.0f;
+	m_fOldPosX = 0.0f;
+	m_fOldPosY = 0.0f;
 	m_fSpeed = 0.0f;
 	m_fYSpeed = 0.0f;
+
+	for (int i = 0; i < PLAYER_DIRECTION_NUM; i++)
+	{
+		m_bDir[i] = false;
+	}
 }
 CPlayer::~CPlayer() {}
 
@@ -70,9 +77,22 @@ void CPlayer::Fin()
 	m_fYSpeed = 0.0f;
 }
 
+// 更新処理
+void CPlayer::Update()
+{
+	m_fOldPosX = m_fPosX;
+	m_fOldPosY = m_fPosY;
+
+	for (int i = 0; i < PLAYER_DIRECTION_NUM; i++)
+	{
+		m_bDir[i] = false;
+	}
+}
+
 //====================
 //      　関数
 //====================
+
 // 移動処理
 void CPlayer::Move()
 {
@@ -80,10 +100,12 @@ void CPlayer::Move()
 	if (Input::Key::Keep(KEY_INPUT_A))
 	{
 		m_fPosX -= SPEED;
+		m_bDir[PLAYER_LEFT] = true;
 	}
 	else if (Input::Key::Keep(KEY_INPUT_D))
 	{
 		m_fPosX += SPEED;
+		m_bDir[PLAYER_RIGHT] = true;
 	}
 }
 
@@ -109,14 +131,22 @@ void CPlayer::Jump()
 	{
 		m_fPosY = fFloorPos;
 	}
+
+	if (m_fYSpeed <= 0)
+	{
+		m_bDir[PLAYER_UP] = true;
+	}
+	else {
+		m_bDir[PLAYER_DOWN] = true;
+	}
 }
 
 // マップに当たった時
-void CPlayer::HitMapCalc_X(float iPlusorMinus)
+void CPlayer::SetPosX(float fOverlap)
 {
-	m_fPosX += SPEED * iPlusorMinus;
+	m_fPosX = fOverlap;
 }
-void CPlayer::HitMapCalc_Y(float iPlusorMinus)
+void CPlayer::SetPosY(float fOverlap)
 {
-	m_fPosY += SPEED * iPlusorMinus;
+	m_fPosY = fOverlap;
 }

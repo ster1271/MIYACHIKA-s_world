@@ -24,6 +24,8 @@ static const char MapFilePath[MAP_MAX_NUM][256]
 //マップ素材データの種類
 const enum MAPTIP_TYPE
 {
+	MAPTIP_TYPE_NONE = -1,
+
 	MAPTIP_TYPE_00,
 	MAPTIP_TYPE_01,
 	MAPTIP_TYPE_02,
