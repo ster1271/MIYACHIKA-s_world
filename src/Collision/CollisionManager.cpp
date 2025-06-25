@@ -18,44 +18,44 @@ void CollisionManager::CheckHitPlayerToMap(CPlayer& cPlayer, CMap& cMap)
 		PlayerSize = cPlayer.GetSize();
 		MapSIze = MAP_TIP_SIZE;
 
+		// Y軸のみの判定
 		if (Collision::IsHitRect2D(
-			(int)PlayerPosX, (int)PlayerPosY, (int)PlayerSize, (int)PlayerSize,
+			(int)PlayerOldPosX, (int)PlayerPosY, (int)PlayerSize, (int)PlayerSize,
 			(int)MapPos.x, (int)MapPos.y, (int)MapSIze.x, (int)MapSIze.y))
 		{
 			// プレイヤーの上側が当たった時
 			if (cPlayer.GetDir(PLAYER_UP))
 			{
-				int Overlap1 = GetOverlap((int)PlayerPosY, (int)(MapPos.y + MapSIze.y));
-				cPlayer.SetPosY(PlayerOldPosY);
+				int Overlap1 = (int)((MapPos.y + MapSIze.y) - PlayerPosY);
+				cPlayer.HitMapY(PlayerPosY + Overlap1);
 			}
 
 			// プレイヤーの下側が当たった時
 			if (cPlayer.GetDir(PLAYER_DOWN))
 			{
-				int Overlap2 = GetOverlap((int)MapPos.y, (int)(PlayerPosY + PlayerSize));
-				cPlayer.SetPosY(PlayerOldPosY);
+				int Overlap2 = (int)((PlayerPosY + PlayerSize) - MapPos.y);
+  				cPlayer.HitMapY(PlayerPosY - Overlap2);
+				cPlayer.HitLowerSide();
 			}
-
+		}
+		// X軸のみの判定
+		if (Collision::IsHitRect2D(
+			(int)PlayerPosX, (int)PlayerOldPosY, (int)PlayerSize, (int)PlayerSize,
+			(int)MapPos.x, (int)MapPos.y, (int)MapSIze.x, (int)MapSIze.y))
+		{
 			// プレイヤーの左側が当たった時
 			if (cPlayer.GetDir(PLAYER_LEFT))
 			{
-				int Overlap3 = GetOverlap((int)PlayerPosX, (int)(MapPos.x + MapSIze.x));
-				cPlayer.SetPosX(PlayerOldPosX);
+				int Overlap3 = (int)((MapPos.x + MapSIze.x) - PlayerPosX);
+				cPlayer.HitMapX(PlayerPosX + Overlap3);
 			}
 
 			// プレイヤーの右側が当たった時
 			if (cPlayer.GetDir(PLAYER_RIGHT))
 			{
-				int Overlap4 = GetOverlap((int)MapPos.x, (int)(PlayerPosX + PlayerSize));
-				cPlayer.SetPosX(PlayerOldPosX);
+				int Overlap4 = (int)((PlayerPosX + PlayerSize) - MapPos.x);
+				cPlayer.HitMapX(PlayerPosX - Overlap4);
 			}
 		}
 	}
-}
-
-// 2つの座標がか重なっている量を取得
-int CollisionManager::GetOverlap(int iPosA, int iPosB)
-{
-	int ret = iPosA - iPosB;
-	return abs(ret);
 }

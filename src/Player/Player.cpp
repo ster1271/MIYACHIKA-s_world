@@ -56,6 +56,26 @@ void CPlayer::Step()
 {
 	Move();
 	Jump();
+	Direction();
+
+	// Debug
+	if (Input::Key::Push(KEY_INPUT_1))
+	{
+		SetJumpPower(JUMP_POWER_1);
+	}
+	else if (Input::Key::Push(KEY_INPUT_2))
+	{
+		SetJumpPower(JUMP_POWER_2);
+	}
+	else if (Input::Key::Push(KEY_INPUT_3))
+	{
+		SetJumpPower(JUMP_POWER_3);
+	}
+
+	if (Input::Key::Push(KEY_INPUT_4))
+	{
+		SetPos(INIT_POS_X, INIT_POS_Y);
+	}
 }
 
 // 描画処理
@@ -100,12 +120,10 @@ void CPlayer::Move()
 	if (Input::Key::Keep(KEY_INPUT_A))
 	{
 		m_fPosX -= SPEED;
-		m_bDir[PLAYER_LEFT] = true;
 	}
 	else if (Input::Key::Keep(KEY_INPUT_D))
 	{
 		m_fPosX += SPEED;
-		m_bDir[PLAYER_RIGHT] = true;
 	}
 }
 
@@ -117,36 +135,51 @@ void CPlayer::Jump()
 		m_fYSpeed = -MAX_JUMP_Y[m_eJumpPower];
 	}
 
-	m_fYSpeed += GRAVITY;
-
-	if (m_fYSpeed > MAX_JUMP_Y[m_eJumpPower])
+	if (m_fYSpeed < MAX_JUMP_Y[m_eJumpPower])
 	{
-		m_fYSpeed = MAX_JUMP_Y[m_eJumpPower];
+		m_fYSpeed += GRAVITY;
 	}
 
 	m_fPosY += m_fYSpeed;
+}
 
-	float fFloorPos = (float)SCREEN_SIZE_Y - PLAYER_SIZE * 2.0f;
-	if (m_fPosY >= fFloorPos)
-	{
-		m_fPosY = fFloorPos;
-	}
-
-	if (m_fYSpeed <= 0)
+// プレイヤーの方向
+void CPlayer::Direction()
+{
+	// 上方向のチェック
+	if (m_fPosY < m_fOldPosY) 
 	{
 		m_bDir[PLAYER_UP] = true;
 	}
-	else {
+	// 下方向のチェック
+	if (m_fPosY > m_fOldPosY) 
+	{
 		m_bDir[PLAYER_DOWN] = true;
+	}
+	// 左方向のチェック
+	if (m_fPosX < m_fOldPosX) 
+	{
+		m_bDir[PLAYER_LEFT] = true;
+	}
+	// 右方向のチェック
+	if (m_fPosX > m_fOldPosX) 
+	{
+		m_bDir[PLAYER_RIGHT] = true;
 	}
 }
 
 // マップに当たった時
-void CPlayer::SetPosX(float fOverlap)
+void CPlayer::HitMapX(float fOverlap)
 {
 	m_fPosX = fOverlap;
 }
-void CPlayer::SetPosY(float fOverlap)
+void CPlayer::HitMapY(float fOverlap)
 {
 	m_fPosY = fOverlap;
+}
+
+// 下側に当たった時
+void CPlayer::HitLowerSide()
+{
+	m_fYSpeed = 0.0f;
 }

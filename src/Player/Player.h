@@ -1,19 +1,21 @@
 #pragma once
 
+// プレイヤーの移動方向
 enum PLAYER_DIRECTION {
-	PLAYER_UP,
-	PLAYER_DOWN,
-	PLAYER_LEFT,
-	PLAYER_RIGHT,
+	PLAYER_UP,				// 上に移動
+	PLAYER_DOWN,			// 下に移動
+	PLAYER_LEFT,			// 左に移動
+	PLAYER_RIGHT,			// 右に移動
 
-	PLAYER_DIRECTION_NUM
+	PLAYER_DIRECTION_NUM	// プレイヤーの移動方向の総数
 };
 
+// プレイヤーのジャンプパワー
 enum PLAYER_JUMP_POWER
 {
 	JUMP_POWER_1,			// ジャンプのパワー1
-	JUMP_POWER_2,			// ジャンプのパワー1
-	JUMP_POWER_3,			// ジャンプのパワー1
+	JUMP_POWER_2,			// ジャンプのパワー2
+	JUMP_POWER_3,			// ジャンプのパワー3
 
 	PLAYER_JUMP_POWER_NUM	// ジャンプのパワー総数
 };
@@ -60,9 +62,15 @@ public:
 	// ジャンプ処理
 	void Jump();
 
+	// プレイヤーの方向
+	void Direction();
+
 	// マップに当たった時
-	void SetPosX(float fOverlap);
-	void SetPosY(float fOverlap);
+	void HitMapX(float fOverlap);
+	void HitMapY(float fOverlap);
+
+	// 下側に当たった時
+	void HitLowerSide();
 
 	//====================
 	//   取得・設定関連
@@ -80,10 +88,18 @@ public:
 	float GetSize() { return PLAYER_SIZE; }
 
 	// プレイヤーの移動方向を取得
-	bool& GetDir(PLAYER_DIRECTION DirID) { return m_bDir[DirID]; }
+	bool GetDir(PLAYER_DIRECTION DirID) { return m_bDir[DirID]; }
+
+	// プレイヤーの座標を設定
+	void SetPos(float fPosX, float fPosY)
+	{
+		m_fPosX = fPosX;
+		m_fPosY = fPosY;
+	}
 
 	// プレイヤーのジャンプパワーを設定
-	void SetJumpPower(PLAYER_JUMP_POWER JumpPower) {
+	void SetJumpPower(PLAYER_JUMP_POWER JumpPower)
+	{
 		m_eJumpPower = JumpPower;
 	}
 };
