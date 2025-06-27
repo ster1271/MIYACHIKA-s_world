@@ -69,8 +69,14 @@ public:
 	void HitMapX(float fOverlap);
 	void HitMapY(float fOverlap);
 
+	// 上側に当たった時
+	void HitUpperSide();
+
 	// 下側に当たった時
 	void HitLowerSide();
+
+	// プレイヤーのジャンプパワーを変える
+	void SetJumpPower(PLAYER_JUMP_POWER JumpPower);
 
 	//====================
 	//   取得・設定関連
@@ -95,11 +101,5 @@ public:
 	{
 		m_fPosX = fPosX;
 		m_fPosY = fPosY;
-	}
-
-	// プレイヤーのジャンプパワーを設定
-	void SetJumpPower(PLAYER_JUMP_POWER JumpPower)
-	{
-		m_eJumpPower = JumpPower;
 	}
 };

@@ -2,6 +2,8 @@
 #include "../Common.h"
 
 const VECTOR MAP_TIP_SIZE = VGet(32.0f, 32.0f, 0.0f);
+// 35
+// 
 
 //マップデータの種類
 enum MAP_TYPE
@@ -26,12 +28,12 @@ const enum MAPTIP_TYPE
 {
 	MAPTIP_TYPE_NONE = -1,
 
-	MAPTIP_TYPE_00,
-	MAPTIP_TYPE_01,
-	MAPTIP_TYPE_02,
-	MAPTIP_TYPE_03,
-	MAPTIP_TYPE_04,
-	MAPTIP_TYPE_05,
+	MAPTIP_TYPE_00,		// ブロック
+	MAPTIP_TYPE_01,		// ジャンプブロック1
+	MAPTIP_TYPE_02,		// ジャンプブロック2
+	MAPTIP_TYPE_03,		// ジャンプブロック3
+	MAPTIP_TYPE_04,		// とげ
+	MAPTIP_TYPE_05,		// ゴール
 
 	MAPTIP_TYPE_NUM,
 };
@@ -39,7 +41,7 @@ const enum MAPTIP_TYPE
 //マップ素材データのファイルパス
 static const char MapTipFilePath[MAPTIP_TYPE_NUM][256]
 {
-	"data/Bloak/Floor.png",
+	"data/Bloak/Block.png",
 	"data/Bloak/JumpBlock1.png",
 	"data/Bloak/JumpBlock2.png",
 	"data/Bloak/JumpBlock3.png",
@@ -90,12 +92,17 @@ public:
 	//マップの読み込み
 	bool LoadMap(MAP_TYPE id);
 
+	// マップチップの種類を変更
+	void ChangeTypeID(int iMapTipNum);
+
 	//====================
 	//   取得・設定関連
 	//====================
 
-	// プレイヤーの座標取得
+	// マップチップの座標取得
 	VECTOR& GetPos(int iMapTipNum) { return MapTipList[iMapTipNum].cPos; }
+	// マップチップの種類取得
+	MAPTIP_TYPE& GetTypeID(int iMapTipNum) { return MapTipList[iMapTipNum].Type_Id; }
 
 	// プレイヤーの大きさ
 	int GetMapTipNum() { return MapTipList.size(); }

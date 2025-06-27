@@ -113,3 +113,23 @@ bool CMap::LoadMap(MAP_TYPE id)
 		return false;
 	}
 }
+
+// マップチップの種類を変更
+void CMap::ChangeTypeID(int iMapTipNum)
+{
+	if (MapTipList[iMapTipNum].Type_Id == MAPTIP_TYPE_01)
+	{
+		MapTipList[iMapTipNum].Type_Id = MAPTIP_TYPE_02;
+		MapTipList[iMapTipNum].iHndl = LoadGraph(MapTipFilePath[MAPTIP_TYPE_02]);
+	}
+	else if (MapTipList[iMapTipNum].Type_Id == MAPTIP_TYPE_02)
+	{
+		MapTipList[iMapTipNum].Type_Id = MAPTIP_TYPE_03;
+		MapTipList[iMapTipNum].iHndl = LoadGraph(MapTipFilePath[MAPTIP_TYPE_03]);
+	}
+	else if (MapTipList[iMapTipNum].Type_Id == MAPTIP_TYPE_03)
+	{
+		MapTipList[iMapTipNum].Type_Id = MAPTIP_TYPE_01;
+		MapTipList[iMapTipNum].iHndl = LoadGraph(MapTipFilePath[MAPTIP_TYPE_01]);
+	}
+}

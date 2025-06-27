@@ -18,6 +18,10 @@ const float SPEED = 2.0f;
 // プレイヤー重力
 const float GRAVITY = 0.1f;
 
+// Y軸加速度の最小
+const float MIN_YSPEED = 0.3;
+
+// ジャンプパワー
 const float MAX_JUMP_Y[PLAYER_JUMP_POWER_NUM] = { 3.0f,4.0f,5.0f };
 
 //==================================================
@@ -57,32 +61,12 @@ void CPlayer::Step()
 	Move();
 	Jump();
 	Direction();
-
-	// Debug
-	if (Input::Key::Push(KEY_INPUT_1))
-	{
-		SetJumpPower(JUMP_POWER_1);
-	}
-	else if (Input::Key::Push(KEY_INPUT_2))
-	{
-		SetJumpPower(JUMP_POWER_2);
-	}
-	else if (Input::Key::Push(KEY_INPUT_3))
-	{
-		SetJumpPower(JUMP_POWER_3);
-	}
-
-	if (Input::Key::Push(KEY_INPUT_4))
-	{
-		SetPos(INIT_POS_X, INIT_POS_Y);
-	}
 }
 
 // 描画処理
 void CPlayer::Draw()
 {
 	DrawGraph((int)m_fPosX, (int)m_fPosY, m_iHndl, true);
-	DrawLine(0, (float)SCREEN_SIZE_Y - PLAYER_SIZE, SCREEN_SIZE_X, (float)SCREEN_SIZE_Y - PLAYER_SIZE, RED);
 }
 
 // 終了処理
@@ -130,10 +114,10 @@ void CPlayer::Move()
 // ジャンプ処理
 void CPlayer::Jump()
 {
-	if (Input::Key::Push(KEY_INPUT_SPACE))
+	/*if (Input::Key::Push(KEY_INPUT_SPACE))
 	{
 		m_fYSpeed = -MAX_JUMP_Y[m_eJumpPower];
-	}
+	}*/
 
 	if (m_fYSpeed < MAX_JUMP_Y[m_eJumpPower])
 	{
@@ -147,12 +131,12 @@ void CPlayer::Jump()
 void CPlayer::Direction()
 {
 	// 上方向のチェック
-	if (m_fPosY < m_fOldPosY) 
+	if (m_fYSpeed < 0.0f && m_fPosY < m_fOldPosY)
 	{
 		m_bDir[PLAYER_UP] = true;
 	}
 	// 下方向のチェック
-	if (m_fPosY > m_fOldPosY) 
+	if (m_fYSpeed > MIN_YSPEED && m_fPosY > m_fOldPosY)
 	{
 		m_bDir[PLAYER_DOWN] = true;
 	}
@@ -178,8 +162,21 @@ void CPlayer::HitMapY(float fOverlap)
 	m_fPosY = fOverlap;
 }
 
+// 上側に当たった時
+void CPlayer::HitUpperSide()
+{
+	m_fYSpeed = 0.0f;
+}
+
 // 下側に当たった時
 void CPlayer::HitLowerSide()
 {
-	m_fYSpeed = 0.0f;
+	m_fYSpeed = MIN_YSPEED;
+}
+
+// プレイヤーのジャンプパワーを変える
+void CPlayer::SetJumpPower(PLAYER_JUMP_POWER JumpPower)
+{
+	m_eJumpPower = JumpPower;
+	m_fYSpeed = -MAX_JUMP_Y[m_eJumpPower];
 }

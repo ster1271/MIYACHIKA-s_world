@@ -7,9 +7,9 @@
 
 void ScenePlay::Init()
 {
-	cPlayer.Init();
 	cMap.Init();
 	cMap.Load(MAP_TYPE_00);
+	cPlayer.Init();
 }
 
 void ScenePlay::Step()
@@ -32,16 +32,18 @@ void ScenePlay::Step()
 }
 void ScenePlay::Draw()
 {
-	cPlayer.Draw();
 	cMap.Draw();
+	cPlayer.Draw();
 }
 void ScenePlay::Fin()
 {
-	cPlayer.Fin();
 	cMap.Exit();
+	cPlayer.Fin();
 }
 
 void ScenePlay::Collision()
 {
 	CollisionManager::CheckHitPlayerToMap(cPlayer, cMap);
+	CollisionManager::CheckHitPlayerToJumpBlock(cPlayer, cMap);
+	CollisionManager::CheckHitPlayerToThorn(cPlayer, cMap);
 }
