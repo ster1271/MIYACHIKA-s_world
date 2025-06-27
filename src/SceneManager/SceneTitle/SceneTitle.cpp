@@ -6,6 +6,9 @@
 #include "../../SoundManager/SoundManager.h"
 #include <cstdlib>
 
+// タイトルの名前
+constexpr char TITLE_NAME[] = "なんかはね～る";
+
 // ゲームやめるボタンやスタートボタンの大きさ
 constexpr int BUTTON_SIZE[2] = { 320,108 };
 
@@ -31,6 +34,18 @@ constexpr int BUTTON_POS[SceneTitle::SELECTABLE_GRAPH_TYPE_NUM][2] = {
 	{HALF_SCREEN_SIZE_X - BUTTON_SIZE[0] / 2,550},
 };
 
+// 画像のパス
+constexpr char GRAPH_PATH[SceneTitle::GRAPH_TYPE_NUM][256] = {
+	"data/Bloak/JumpBlock1.png",
+	"data/Bloak/JumpBlock1.png",
+	"data/Title/Start.png",
+	"data/Title/Leave.png",
+	"data/Bloak/JumpBlock1.png",
+	"data/Bloak/JumpBlock2.png",
+	"data/Bloak/JumpBlock3.png",
+	"data/Title/SelectBG.png",
+};
+
 void SceneTitle::Init()
 {
 	// フォントロード
@@ -42,14 +57,23 @@ void SceneTitle::Init()
 
 	m_LogoBoundCnt = 0;
 	m_LogoYSpeed = LOGO_JUMP_POWER[m_LogoBoundCnt];
+	for (int i = 0; i < GRAPH_TYPE_NUM; i++) {
+		if (m_Hndl[i] == -1)continue;
+		m_Hndl[i] = -1;
+	}
+
+	for (int i = 0; i < GRAPH_TYPE_NUM; i++) {
+		if (m_Hndl[i] != -1)continue;
+		m_Hndl[i] = LoadGraph(GRAPH_PATH[i]);
+	}
 }
 
 void SceneTitle::Step()
 {
 	// デバッグ文字表示用
-	DebugString* dbgStr = DebugString::GetInstance();
-	dbgStr->AddString(0, 0, FontType::HGP創英角ポップ体24, WHITE, "タイトルです");
-	dbgStr->AddString(0, 24, FontType::HGP創英角ポップ体24, WHITE, "左クリックもしくはコントローラ×ボタンでプレイに");
+	//DebugString* dbgStr = DebugString::GetInstance();
+	//dbgStr->AddString(0, 0, FontType::HGP創英角ポップ体24, WHITE, "タイトルです");
+	//dbgStr->AddString(0, 24, FontType::HGP創英角ポップ体24, WHITE, "左クリックもしくはコントローラ×ボタンでプレイに");
 
 	//上下で選択を変える
 	if (Input::Conclusion(Input::Type::MOVE_UP)) {
@@ -87,10 +111,12 @@ void SceneTitle::Step()
 		m_isOffscreenBeen = true;
 	}
 
-	if (m_LogoPos[1] > TITLE_Y_POS_LOWER_LIMIT) {
-		m_LogoPos[1] = TITLE_Y_POS_LOWER_LIMIT;
-		m_LogoBoundCnt++;
-		m_LogoYSpeed = LOGO_JUMP_POWER[m_LogoBoundCnt];
+	if (m_LogoBoundCnt < LOGO_JUMP_NUM) {
+		if (m_LogoPos[1] > TITLE_Y_POS_LOWER_LIMIT) {
+			m_LogoPos[1] = TITLE_Y_POS_LOWER_LIMIT;
+			m_LogoBoundCnt++;
+			m_LogoYSpeed = LOGO_JUMP_POWER[m_LogoBoundCnt];
+		}
 	}
 
 	// 次ボタンでプレイへ
@@ -99,39 +125,34 @@ void SceneTitle::Step()
 }
 void SceneTitle::Draw()
 {
-	// ボタンの左上の座標と右下の座標
-	int ButtonPos1[SELECTABLE_GRAPH_TYPE_NUM][2] = { 
+	// ボタンの座標
+	int ButtonPos1[SELECTABLE_GRAPH_TYPE_NUM][2] = {
 		{BUTTON_POS[SELECTABLE_GRAPH_TYPE_START][0] ,BUTTON_POS[SELECTABLE_GRAPH_TYPE_START][1]},
 		{BUTTON_POS[SELECTABLE_GRAPH_TYPE_END][0] ,BUTTON_POS[SELECTABLE_GRAPH_TYPE_END][1]},
 	};
-	int ButtonPos2[SELECTABLE_GRAPH_TYPE_NUM][2] = {
-		{ButtonPos1[SELECTABLE_GRAPH_TYPE_START][0] + BUTTON_SIZE[0] - 1 ,ButtonPos1[SELECTABLE_GRAPH_TYPE_START][1] + BUTTON_SIZE[1] - 1 },
-		{ButtonPos1[SELECTABLE_GRAPH_TYPE_END][0] + BUTTON_SIZE[0] - 1 ,ButtonPos1[SELECTABLE_GRAPH_TYPE_END][1] + BUTTON_SIZE[1] - 1 },
-	};
-
-	// ボタン描画
-	for (int GraphIndex = 0; GraphIndex < SELECTABLE_GRAPH_TYPE_NUM; GraphIndex++) {
-		DrawBox(ButtonPos1[GraphIndex][0], ButtonPos1[GraphIndex][1], ButtonPos2[GraphIndex][0], ButtonPos2[GraphIndex][1], WHITE, false);
-	}
 
 	// 選択画像
-	// 太くする
-	for (int ThickIndex = 1; ThickIndex < 5; ThickIndex++) {
-		DrawBox(ButtonPos1[m_SelectedGraph][0] - ThickIndex, ButtonPos1[m_SelectedGraph][1] - ThickIndex,
-			ButtonPos2[m_SelectedGraph][0] + ThickIndex, ButtonPos2[m_SelectedGraph][1] + ThickIndex, RED, false);
+	DrawGraph(ButtonPos1[m_SelectedGraph][0], ButtonPos1[m_SelectedGraph][1], m_Hndl[GRAPH_TYPE_LOGOGB], true);
+	
+	// ボタン描画
+	for (int GraphIndex = 0; GraphIndex < SELECTABLE_GRAPH_TYPE_NUM; GraphIndex++) {
+		DrawGraph(ButtonPos1[GraphIndex][0], ButtonPos1[GraphIndex][1], m_Hndl[GRAPH_TYPE_START + GraphIndex], true);
 	}
 
 	// いったん文字表示
 	int logopos[2] = { static_cast<int>(m_LogoPos[0]), static_cast<int>(m_LogoPos[1]) };
-	DebugString* dbgstr = DebugString::GetInstance();
 
+	DebugString* dbgstr = DebugString::GetInstance();
 	if (!m_isOffscreenBeen) {
 		dbgstr->AddFormatString(logopos[0] - 16, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%d", m_LogoBoundCnt + 1);
 	}
 	else {
-		dbgstr->AddString(logopos[0] - 16 * 5, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "Title");
+		dbgstr->AddFormatString(logopos[0] - 16 * 5, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%s", TITLE_NAME);
 	}
 
+	if (m_LogoBoundCnt < LOGO_JUMP_NUM) {
+		DrawGraph(HALF_SCREEN_SIZE_X - 16, static_cast<int>(TITLE_Y_POS_LOWER_LIMIT) + 64, m_Hndl[GRAPH_TYPE_JUMP1 + m_LogoBoundCnt], true);
+	}
 }
 void SceneTitle::Fin()
 {
