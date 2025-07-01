@@ -97,19 +97,11 @@ void CollisionManager::CheckHitPlayerToJumpBlock(CPlayer& cPlayer, CMap& cMap)
 				{
 					int Overlap1 = (int)((MapPos.y + MapSIze.y) - PlayerPosY);
 					cPlayer.HitMapY(PlayerPosY + Overlap1);
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_01)
+
+					if (cPlayer.GetDelay())
 					{
-						cPlayer.SetJumpPower(JUMP_POWER_1);
+						cPlayer.HitJumpBlockUpperSide();
 					}
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_02)
-					{
-						cPlayer.SetJumpPower(JUMP_POWER_2);
-					}
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_03)
-					{
-						cPlayer.SetJumpPower(JUMP_POWER_3);
-					}
-					cMap.ChangeTypeID(MapTipIndex);
 				}
 
 				// プレイヤーの下側が当たった時の処理
@@ -117,19 +109,22 @@ void CollisionManager::CheckHitPlayerToJumpBlock(CPlayer& cPlayer, CMap& cMap)
 				{
 					int Overlap2 = (int)((PlayerPosY + PlayerSize) - MapPos.y);
 					cPlayer.HitMapY(PlayerPosY - Overlap2);
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_01)
+					if (cPlayer.GetDelay())
 					{
-						cPlayer.SetJumpPower(JUMP_POWER_1);
+						if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_01)
+						{
+							cPlayer.HitJumpBlock(JUMP_POWER_1);
+						}
+						if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_02)
+						{
+							cPlayer.HitJumpBlock(JUMP_POWER_2);
+						}
+						if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_03)
+						{
+							cPlayer.HitJumpBlock(JUMP_POWER_3);
+						}
+						cMap.ChangeTypeID(MapTipIndex);
 					}
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_02)
-					{
-						cPlayer.SetJumpPower(JUMP_POWER_2);
-					}
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_03)
-					{
-						cPlayer.SetJumpPower(JUMP_POWER_3);
-					}
-					cMap.ChangeTypeID(MapTipIndex);
 				}
 			}
 			// X軸のみの判定
@@ -141,38 +136,44 @@ void CollisionManager::CheckHitPlayerToJumpBlock(CPlayer& cPlayer, CMap& cMap)
 				if (cPlayer.GetDir(PLAYER_LEFT))
 				{
 					cPlayer.HitMapX(PlayerOldPosX);
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_01)
+					if (cPlayer.GetDelay())
 					{
-						cPlayer.SetJumpPower(JUMP_POWER_1);
+						if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_01)
+						{
+							cPlayer.HitJumpBlock(JUMP_POWER_1);
+						}
+						if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_02)
+						{
+							cPlayer.HitJumpBlock(JUMP_POWER_2);
+						}
+						if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_03)
+						{
+							cPlayer.HitJumpBlock(JUMP_POWER_3);
+						}
+						cMap.ChangeTypeID(MapTipIndex);
 					}
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_02)
-					{
-						cPlayer.SetJumpPower(JUMP_POWER_2);
-					}
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_03)
-					{
-						cPlayer.SetJumpPower(JUMP_POWER_3);
-					}
-					cMap.ChangeTypeID(MapTipIndex);
 				}
 
 				// プレイヤーの右側が当たった時の処理
 				if (cPlayer.GetDir(PLAYER_RIGHT))
 				{
 					cPlayer.HitMapX(PlayerOldPosX);
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_01)
+					if (cPlayer.GetDelay())
 					{
-						cPlayer.SetJumpPower(JUMP_POWER_1);
+						if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_01)
+						{
+							cPlayer.HitJumpBlock(JUMP_POWER_1);
+						}
+						if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_02)
+						{
+							cPlayer.HitJumpBlock(JUMP_POWER_2);
+						}
+						if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_03)
+						{
+							cPlayer.HitJumpBlock(JUMP_POWER_3);
+						}
+						cMap.ChangeTypeID(MapTipIndex);
 					}
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_02)
-					{
-						cPlayer.SetJumpPower(JUMP_POWER_2);
-					}
-					if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_03)
-					{
-						cPlayer.SetJumpPower(JUMP_POWER_3);
-					}
-					cMap.ChangeTypeID(MapTipIndex);
 				}
 			}
 		}
@@ -239,6 +240,33 @@ void CollisionManager::CheckHitPlayerToThorn(CPlayer& cPlayer, CMap& cMap)
 					cPlayer.HitMapX(PlayerPosX - Overlap4);
 					cPlayer.SetPos(INIT_POS_X, INIT_POS_Y);
 				}
+			}
+		}
+	}
+}
+
+// プレイヤーとゴールとの当たり判定
+void CollisionManager::CheckHitPlayerToGoal(CPlayer& cPlayer, CMap& cMap)
+{
+	for (int MapTipIndex = 0; MapTipIndex != cMap.GetMapTipNum(); MapTipIndex++)
+	{
+		float PlayerPosX, PlayerPosY, PlayerSize;
+		VECTOR MapPos, MapSIze;
+
+		PlayerPosX = cPlayer.GetPosX();
+		PlayerPosY = cPlayer.GetPosY();
+		MapPos = cMap.GetPos(MapTipIndex);
+
+		PlayerSize = cPlayer.GetSize();
+		MapSIze = MAP_TIP_SIZE;
+
+		if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_05)
+		{
+			if (Collision::IsHitRect2D(
+				(int)PlayerPosX, (int)PlayerPosY, (int)PlayerSize, (int)PlayerSize,
+				(int)MapPos.x, (int)MapPos.y, (int)MapSIze.x, (int)MapSIze.y))
+			{
+				
 			}
 		}
 	}

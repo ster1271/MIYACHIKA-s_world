@@ -13,4 +13,7 @@ public:
 
 	// プレイヤーととげとの当たり判定
 	static void CheckHitPlayerToThorn(CPlayer& cPlayer, CMap& cMap);
+
+	// プレイヤーとゴールとの当たり判定
+	static void CheckHitPlayerToGoal(CPlayer& cPlayer, CMap& cMap);
 };
