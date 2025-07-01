@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 // タイトルの名前
-constexpr char TITLE_NAME[] = "なんかはね～る";
+constexpr char TITLE_NAME[] = "うんちぷりぷり";
 
 // ゲームやめるボタンやスタートボタンの大きさ
 constexpr int BUTTON_SIZE[2] = { 320,108 };
@@ -102,7 +102,6 @@ void SceneTitle::Step()
 	}
 
 	if (m_LogoBoundCnt < LOGO_JUMP_NUM) {
-		//m_LogoPos[0]++;
 		m_LogoPos[1] += m_LogoYSpeed;
 		m_LogoYSpeed += LOGO_JUMP_GRAVITY;
 	}
@@ -147,7 +146,9 @@ void SceneTitle::Draw()
 		dbgstr->AddFormatString(logopos[0] - 16, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%d", m_LogoBoundCnt + 1);
 	}
 	else {
-		dbgstr->AddFormatString(logopos[0] - 16 * 5, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%s", TITLE_NAME);
+		string str = TITLE_NAME;
+		int length = str.length();
+		dbgstr->AddFormatString(logopos[0] - 16 * length, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%s", TITLE_NAME);
 	}
 
 	if (m_LogoBoundCnt < LOGO_JUMP_NUM) {
