@@ -24,6 +24,9 @@ const float MIN_YSPEED = 0.3;
 // ジャンプパワー
 const float MAX_JUMP_Y[PLAYER_JUMP_POWER_NUM] = { 3.0f,4.0f,5.0f };
 
+// この値分ディレイする
+const int DELAY_NUM = 30;
+
 //==================================================
 
 // コンストラクタ・デストラクタ
@@ -37,6 +40,7 @@ CPlayer::CPlayer()
 	m_fOldPosY = 0.0f;
 	m_fSpeed = 0.0f;
 	m_fYSpeed = 0.0f;
+	m_iDelayCnt = 0;
 
 	for (int i = 0; i < PLAYER_DIRECTION_NUM; i++)
 	{
@@ -61,6 +65,7 @@ void CPlayer::Step()
 	Move();
 	Jump();
 	Direction();
+	AddDelayCnt();
 }
 
 // 描画処理
@@ -152,6 +157,15 @@ void CPlayer::Direction()
 	}
 }
 
+// ディレイカウントを加算
+void CPlayer::AddDelayCnt()
+{
+	if (m_iDelayCnt < DELAY_NUM)
+	{
+		m_iDelayCnt++;
+	}
+}
+
 // マップに当たった時
 void CPlayer::HitMapX(float fOverlap)
 {
@@ -162,21 +176,44 @@ void CPlayer::HitMapY(float fOverlap)
 	m_fPosY = fOverlap;
 }
 
-// 上側に当たった時
+// プレイヤーの上側が当たった時
 void CPlayer::HitUpperSide()
 {
 	m_fYSpeed = 0.0f;
 }
 
-// 下側に当たった時
+// プレイヤーの下側が当たった時
 void CPlayer::HitLowerSide()
 {
 	m_fYSpeed = MIN_YSPEED;
 }
 
-// プレイヤーのジャンプパワーを変える
-void CPlayer::SetJumpPower(PLAYER_JUMP_POWER JumpPower)
+// ジャンプブロックに当たった時
+void CPlayer::HitJumpBlock(PLAYER_JUMP_POWER JumpPower)
 {
 	m_eJumpPower = JumpPower;
 	m_fYSpeed = -MAX_JUMP_Y[m_eJumpPower];
+	m_iDelayCnt = 0;
+}
+
+// プレイヤーの上側がジャンプブロックに当たった時
+void CPlayer::HitJumpBlockUpperSide()
+{
+	m_iDelayCnt = 0;
+}
+
+//====================
+//   取得・設定関連
+//====================
+// ディレイしたか
+bool CPlayer::GetDelay()
+{
+	if (m_iDelayCnt >= DELAY_NUM)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

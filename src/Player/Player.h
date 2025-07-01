@@ -32,6 +32,7 @@ private:
 	float m_fOldPosY;	// 移動前のY座標
 	float m_fSpeed;		// 速度
 	float m_fYSpeed;	// Y軸加速度
+	int m_iDelayCnt;	// ディレイカウント
 
 	// プレイヤーのどの方向に進んでいるか
 	bool m_bDir[PLAYER_DIRECTION_NUM];
@@ -65,18 +66,24 @@ public:
 	// プレイヤーの方向
 	void Direction();
 
+	// ディレイカウントを加算
+	void AddDelayCnt();
+
 	// マップに当たった時
 	void HitMapX(float fOverlap);
 	void HitMapY(float fOverlap);
 
-	// 上側に当たった時
+	// プレイヤーの上側が当たった時
 	void HitUpperSide();
 
-	// 下側に当たった時
+	// プレイヤーの下側が当たった時
 	void HitLowerSide();
 
-	// プレイヤーのジャンプパワーを変える
-	void SetJumpPower(PLAYER_JUMP_POWER JumpPower);
+	// ジャンプブロックに当たった時
+	void HitJumpBlock(PLAYER_JUMP_POWER JumpPower);
+
+	// プレイヤーの上側がジャンプブロックに当たった時
+	void HitJumpBlockUpperSide();
 
 	//====================
 	//   取得・設定関連
@@ -95,6 +102,9 @@ public:
 
 	// プレイヤーの移動方向を取得
 	bool GetDir(PLAYER_DIRECTION DirID) { return m_bDir[DirID]; }
+
+	// ディレイしたか
+	bool GetDelay();
 
 	// プレイヤーの座標を設定
 	void SetPos(float fPosX, float fPosY)
