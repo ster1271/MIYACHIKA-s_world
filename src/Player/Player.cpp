@@ -8,10 +8,6 @@
 // プレイヤーの画像ファイルパス
 const char PLAYER_FILE_PATH[] = { "data/Player/プレイヤー(仮).png" };
 
-// プレイヤー初期座標
-const float INIT_POS_X = (float)(SCREEN_SIZE_X / 2);
-const float INIT_POS_Y = (float)(SCREEN_SIZE_Y / 2);
-
 // プレイヤー速度
 const float SPEED = 2.0f;
 
@@ -22,7 +18,7 @@ const float GRAVITY = 0.1f;
 const float MIN_YSPEED = 0.3;
 
 // ジャンプパワー
-const float MAX_JUMP_Y[PLAYER_JUMP_POWER_NUM] = { 3.0f,4.0f,5.0f };
+const float MAX_JUMP_Y[PLAYER_JUMP_POWER_NUM] = { 2.7f,3.65f,4.5f };
 
 // この値分ディレイする
 const int DELAY_NUM = 30;
@@ -119,7 +115,8 @@ void CPlayer::Move()
 // ジャンプ処理
 void CPlayer::Jump()
 {
-	/*if (Input::Key::Push(KEY_INPUT_SPACE))
+	/*手動ジャンプ
+	if (Input::Key::Push(KEY_INPUT_SPACE))
 	{
 		m_fYSpeed = -MAX_JUMP_Y[m_eJumpPower];
 	}*/
