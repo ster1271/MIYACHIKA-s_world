@@ -4,7 +4,7 @@
 #include "../../Input/Input.h"
 #include "../../Debug/DebugString.h"
 //マップ素材データのファイルパス
-static const char MapTipFilePath[SceneClear::GRAPH_TYPE_NUM][256]
+static const char GRAPH_PATH[SceneClear::GRAPH_TYPE_NUM][256]
 {
 	"data/Bloak/Block.png",
 	"data/Bloak/Block.png",
@@ -14,6 +14,15 @@ static const char MapTipFilePath[SceneClear::GRAPH_TYPE_NUM][256]
 
 void SceneClear::Init()
 {
+	for (int i = 0; i < GRAPH_TYPE_NUM; i++) {
+		if (m_Hndl[i] == -1)continue;
+		m_Hndl[i] = -1;
+	}
+
+	for (int i = 0; i < GRAPH_TYPE_NUM; i++) {
+		if (m_Hndl[i] != -1)continue;
+		m_Hndl[i] = LoadGraph(GRAPH_PATH[i]);
+	}
 }
 void SceneClear::Step()
 {
@@ -28,6 +37,7 @@ void SceneClear::Step()
 void SceneClear::Draw()
 {
 	// ゲームクリアの文字に表示
+
 }
 void SceneClear::Fin()
 {

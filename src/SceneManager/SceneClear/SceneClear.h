@@ -3,8 +3,6 @@
 
 class SceneClear :public SceneBace
 {
-private:
-
 public:
 	// •\Ž¦‚·‚é‰æ‘œ‚ÌŽí—Þ
 	enum GRAPH_TYPE {
@@ -15,6 +13,9 @@ public:
 		GRAPH_TYPE_NUM,
 
 	};
+private:
+	int m_Hndl[GRAPH_TYPE_NUM];	// ‰æ‘œƒnƒ“ƒhƒ‹
+public:
 	void Init();
 	void Step();
 	void Draw();
