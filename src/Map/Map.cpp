@@ -83,6 +83,11 @@ bool CMap::LoadMap(MAP_TYPE id)
 			tmpInfo.Type_Id = (MAPTIP_TYPE)FileNum;
 			tmpInfo.iHndl = LoadGraph(MapTipFilePath[FileNum]);
 
+			if (tmpInfo.Type_Id == MAPTIP_TYPE_05)
+			{
+				cStartPos = tmpInfo.cPos;
+			}
+
 			//ƒŠƒXƒg‚ÉŠi”[
 			MapTipList.push_back(tmpInfo);
 

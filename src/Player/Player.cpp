@@ -50,11 +50,11 @@ CPlayer::CPlayer()
 CPlayer::~CPlayer() {}
 
 // èâä˙âª
-void CPlayer::Init()
+void CPlayer::Init(VECTOR vStartPos)
 {
 	m_iHndl = LoadGraph(PLAYER_FILE_PATH);
-	m_fPosX = INIT_POS_X;
-	m_fPosY = INIT_POS_Y;
+	m_fPosX = vStartPos.x;
+	m_fPosY = vStartPos.y;
 	m_fSpeed = SPEED;
 	m_fYSpeed = MAX_JUMP_Y[m_eJumpPower];
 }
