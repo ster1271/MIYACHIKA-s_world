@@ -9,7 +9,7 @@ void ScenePlay::Init()
 {
 	cMap.Init();
 	cMap.Load(MAP_TYPE_00);
-	cPlayer.Init();
+	cPlayer.Init(cMap.GetStartPos());
 }
 
 void ScenePlay::Step()

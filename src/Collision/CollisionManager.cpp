@@ -186,13 +186,14 @@ void CollisionManager::CheckHitPlayerToThorn(CPlayer& cPlayer, CMap& cMap)
 	for (int MapTipIndex = 0; MapTipIndex != cMap.GetMapTipNum(); MapTipIndex++)
 	{
 		float PlayerPosX, PlayerPosY, PlayerOldPosX, PlayerOldPosY, PlayerSize;
-		VECTOR MapPos, MapSIze;
+		VECTOR MapPos, StartPosSIze, MapSIze;
 
 		PlayerPosX = cPlayer.GetPosX();
 		PlayerPosY = cPlayer.GetPosY();
 		PlayerOldPosX = cPlayer.GetOldPosX();
 		PlayerOldPosY = cPlayer.GetOldPosY();
 		MapPos = cMap.GetPos(MapTipIndex);
+		StartPosSIze = cMap.GetStartPos();
 
 		PlayerSize = cPlayer.GetSize();
 		MapSIze = MAP_TIP_SIZE;
@@ -209,7 +210,7 @@ void CollisionManager::CheckHitPlayerToThorn(CPlayer& cPlayer, CMap& cMap)
 				{
 					int Overlap1 = (int)((MapPos.y + MapSIze.y) - PlayerPosY);
 					cPlayer.HitMapY(PlayerPosY + Overlap1);
-					cPlayer.SetPos(INIT_POS_X, INIT_POS_Y);
+					cPlayer.SetPos(StartPosSIze.x, StartPosSIze.y);
 				}
 
 				// プレイヤーの下側が当たった時の処理
@@ -217,7 +218,7 @@ void CollisionManager::CheckHitPlayerToThorn(CPlayer& cPlayer, CMap& cMap)
 				{
 					int Overlap2 = (int)((PlayerPosY + PlayerSize) - MapPos.y);
 					cPlayer.HitMapY(PlayerPosY - Overlap2);
-					cPlayer.SetPos(INIT_POS_X, INIT_POS_Y);
+					cPlayer.SetPos(StartPosSIze.x, StartPosSIze.y);
 				}
 			}
 			// X軸のみの判定
@@ -230,7 +231,7 @@ void CollisionManager::CheckHitPlayerToThorn(CPlayer& cPlayer, CMap& cMap)
 				{
 					int Overlap3 = (int)((MapPos.x + MapSIze.x) - PlayerPosX);
 					cPlayer.HitMapX(PlayerPosX + Overlap3);
-					cPlayer.SetPos(INIT_POS_X, INIT_POS_Y);
+					cPlayer.SetPos(StartPosSIze.x, StartPosSIze.y);
 				}
 
 				// プレイヤーの右側が当たった時の処理
@@ -238,7 +239,7 @@ void CollisionManager::CheckHitPlayerToThorn(CPlayer& cPlayer, CMap& cMap)
 				{
 					int Overlap4 = (int)((PlayerPosX + PlayerSize) - MapPos.x);
 					cPlayer.HitMapX(PlayerPosX - Overlap4);
-					cPlayer.SetPos(INIT_POS_X, INIT_POS_Y);
+					cPlayer.SetPos(StartPosSIze.x, StartPosSIze.y);
 				}
 			}
 		}

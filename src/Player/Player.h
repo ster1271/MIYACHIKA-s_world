@@ -1,4 +1,5 @@
 #pragma once
+#include "DxLib.h"
 
 // プレイヤーの移動方向
 enum PLAYER_DIRECTION {
@@ -45,10 +46,10 @@ public:
 	CPlayer();
 	~CPlayer();
 
-	void Init();	// 初期化
-	void Step();	// 通常処理
-	void Draw();	// 描画処理
-	void Fin();		// 終了処理
+	void Init(VECTOR vStartPos);	// 初期化
+	void Step();					// 通常処理
+	void Draw();					// 描画処理
+	void Fin();						// 終了処理
 
 	// 更新処理
 	void Update();

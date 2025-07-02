@@ -33,7 +33,8 @@ const enum MAPTIP_TYPE
 	MAPTIP_TYPE_02,		// ジャンプブロック2
 	MAPTIP_TYPE_03,		// ジャンプブロック3
 	MAPTIP_TYPE_04,		// とげ
-	MAPTIP_TYPE_05,		// ゴール
+	MAPTIP_TYPE_05,		// スタート
+	MAPTIP_TYPE_06,		// ゴール
 
 	MAPTIP_TYPE_NUM,
 };
@@ -46,6 +47,7 @@ static const char MapTipFilePath[MAPTIP_TYPE_NUM][256]
 	"data/Bloak/JumpBlock2.png",
 	"data/Bloak/JumpBlock3.png",
 	"data/Bloak/Thorn.png",
+	"data/Bloak/Start.png",
 	"data/Bloak/Goal.png",
 };
 
@@ -62,6 +64,8 @@ public:
 		MAPTIP_TYPE Type_Id;
 		int iHndl;
 	};
+
+	VECTOR cStartPos;
 
 	vector<MapTipInfo> MapTipList;		//マップチップ情報格納リスト
 
@@ -101,6 +105,8 @@ public:
 
 	// マップチップの座標取得
 	VECTOR& GetPos(int iMapTipNum) { return MapTipList[iMapTipNum].cPos; }
+	// スタート位置の座標取得
+	VECTOR& GetStartPos() { return cStartPos; }
 	// マップチップの種類取得
 	MAPTIP_TYPE& GetTypeID(int iMapTipNum) { return MapTipList[iMapTipNum].Type_Id; }
 
