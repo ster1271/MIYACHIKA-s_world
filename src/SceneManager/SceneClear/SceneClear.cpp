@@ -6,7 +6,7 @@
 //マップ素材データのファイルパス
 static const char GRAPH_PATH[SceneClear::GRAPH_TYPE_NUM][256]
 {
-	"data/Bloak/Block.png",
+	"data/Clear/Clear.png",
 	"data/Bloak/Block.png",
 	"data/Bloak/Thorn.png",
 	"data/Bloak/Goal.png",
@@ -37,7 +37,8 @@ void SceneClear::Step()
 void SceneClear::Draw()
 {
 	// ゲームクリアの文字に表示
-
+	DrawGraph(0, 0, m_Hndl[GRAPH_TYPE_BG], true);
+	DrawGraph(SCREEN_SIZE_X - 32, 128, m_Hndl[GRAPH_TYPE_GOAL], true);
 }
 void SceneClear::Fin()
 {
