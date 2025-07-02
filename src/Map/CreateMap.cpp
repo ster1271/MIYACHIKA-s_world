@@ -5,6 +5,7 @@
 //コンストラクタ
 CreateMap::CreateMap()
 {
+	MouseX = MouseY = 0.0f;
 	SetBlockNum = -1;
 	In_Entry = false;
 	IsFinish = false;
@@ -29,6 +30,8 @@ CreateMap::~CreateMap() {};
 //初期化
 void CreateMap::Init()
 {
+	MouseX = MouseY = 0.0f;
+
 	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 	{
 		DataHndl[Index] = -1;
@@ -50,6 +53,8 @@ void CreateMap::Init()
 //終了処理
 void CreateMap::Exit()
 {
+	MouseX = MouseY = 0.0f;
+
 	SetBlockNum = 0;
 	In_Entry = false;
 	IsFinish = false;
@@ -72,11 +77,11 @@ void CreateMap::Draw()
 	{
 		for (int IndexX = 0; IndexX < MAX_MAPTIP_X; IndexX++)
 		{
-			DrawBox(MapX + IndexX * MAPTIP_SIZE, MapY + IndexY * MAPTIP_SIZE,
-				MapX + IndexX * MAPTIP_SIZE + MAPTIP_SIZE, MapY + IndexY * MAPTIP_SIZE + MAPTIP_SIZE,
+			DrawBox(BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y,
+				BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x + MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y + MAP_TIP_SIZE.y,
 				WHITE, false);
 
-			DrawGraph(MapX + IndexX * MAPTIP_SIZE, MapY + IndexY * MAPTIP_SIZE, DataHndl[MapTipData[IndexY][IndexX]], false);
+			DrawGraph(BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, DataHndl[MapTipData[IndexY][IndexX]], false);
 		}
 	}
 
@@ -90,6 +95,8 @@ void CreateMap::Draw()
 //処理
 void CreateMap::Step()
 {	
+	GetMousePoint(&MouseX, &MouseY);
+
 	//設置するブロック選択処理
 	SelectBlock();
 
@@ -106,12 +113,12 @@ void CreateMap::Step()
 //設置するブロック選択処理
 void CreateMap::SelectBlock()
 {
-	if (CMouse::IsMouseKeep(MOUSE_INPUT_LEFT))
+	if (Input::Mouse::Keep(MOUSE_INPUT_LEFT))
 	{
 		for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 		{
 			//マウス座標が選びたいブロックの範囲内なら
-			if (CMouse::WithinBox_Rota(VGet(70.0f, 150.0f + 60.0f * Index, 0.0f), 48, 48))
+			if (CreateMap::WithinBox_Rota(MouseX, MouseY, VGet(70.0f, 150.0f + 60.0f * Index, 0.0f), 48, 48))
 			{
 				//選びたいブロックの番号を格納する
 				SetBlockNum = Index;
@@ -124,15 +131,15 @@ void CreateMap::SelectBlock()
 //ブロック設置処理
 void CreateMap::SetBlock()
 {
-	if (CMouse::IsMouseKeep(MOUSE_INPUT_LEFT))
+	if (Input::Mouse::Keep(MOUSE_INPUT_LEFT))
 	{
 		for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
 		{
 			for (int IndexX = 0; IndexX < MAX_MAPTIP_X; IndexX++)
 			{
 				//マウス座標がボックスの範囲内なら
-				if (CMouse::WithinBox(VGet((float)MapX + IndexX * (float)MAPTIP_SIZE, (float)MapY + IndexY * (float)MAPTIP_SIZE, 0.0f),
-					MAPTIP_SIZE, MAPTIP_SIZE))
+				if (CreateMap::WithinBox(MouseX, MouseY, VGet((float)BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, (float)BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, 0.0f),
+					MAP_TIP_SIZE.x, MAP_TIP_SIZE.x))
 				{
 					MapTipData[IndexY][IndexX] = SetBlockNum;
 				}
@@ -145,7 +152,7 @@ void CreateMap::SetBlock()
 //ブロック削除処理
 void CreateMap::EraseBlock()
 {
-	if (CMouse::IsMouseKeep(MOUSE_INPUT_LEFT))
+	if (Input::Mouse::Keep(MOUSE_INPUT_LEFT))
 	{
 		//選択ブロックが消しゴムじゃないなら処理しない
 		if (SetBlockNum != 0)
@@ -156,8 +163,8 @@ void CreateMap::EraseBlock()
 			for (int IndexX = 0; IndexX < MAX_MAPTIP_X; IndexX++)
 			{
 				//マウス座標がボックスの範囲内なら
-				if (CMouse::WithinBox(VGet((float)MapX + IndexX * (float)MAPTIP_SIZE, (float)MapY + IndexY * (float)MAPTIP_SIZE, 0.0f),
-					MAPTIP_SIZE, MAPTIP_SIZE))
+				if (CreateMap::WithinBox(MouseX, MouseY, VGet((float)BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, (float)BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, 0.0f),
+					MAP_TIP_SIZE.x, MAP_TIP_SIZE.x)) 
 				{
 					MapTipData[IndexY][IndexX] = -1;
 				}
@@ -174,7 +181,7 @@ void CreateMap::SaveMapTip()
 	string FilePath = "data/Map/MapDataFile/";		//ファイルを入れる場所
 	string Extension = ".txt";						//拡張子
 
-	if (CInput::IsKeyKeep(KEY_INPUT_S) && CInput::IsKeyKeep(KEY_INPUT_LCONTROL))
+	if (Input::Key::Keep(KEY_INPUT_S) && Input::Key::Keep(KEY_INPUT_LCONTROL))
 	{
 		In_Entry = true;
 	}
@@ -271,3 +278,34 @@ void CreateMap::SaveMapTip()
 	In_Entry = false;
 	SetIsEditer(false);
 }
+
+
+//マウス範囲内判定(DrawRota用)
+bool CreateMap::WithinBox_Rota(int MousePosX, int MousePosY, VECTOR vPos, int WIDTH, int HEIGHT)
+{
+	if (MousePosX < vPos.x + WIDTH / 2 && MousePosX > vPos.x - WIDTH / 2)
+	{
+		if (MousePosY < vPos.y + HEIGHT / 2 && MousePosY > vPos.y - HEIGHT / 2)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+//マウス範囲内判定(DrawGraph用)
+bool CreateMap::WithinBox(int MousePosX, int MousePosY, VECTOR vPos, int WIDTH, int HEIGHT)
+{
+	if (MousePosX > vPos.x && MousePosX < vPos.x + WIDTH)
+	{
+		if (MousePosY > vPos.y && MousePosY < vPos.y + HEIGHT)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+

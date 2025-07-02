@@ -1,10 +1,6 @@
 #include "Collision.h"
 #include "CollisionManager.h"
 
-// プレイヤー初期座標
-const float INIT_POS_X = (float)(SCREEN_SIZE_X / 2);
-const float INIT_POS_Y = (float)(SCREEN_SIZE_Y / 2);
-
 // プレイヤーとマップとの当たり判定
 void CollisionManager::CheckHitPlayerToMap(CPlayer& cPlayer, CMap& cMap)
 {
@@ -101,6 +97,7 @@ void CollisionManager::CheckHitPlayerToJumpBlock(CPlayer& cPlayer, CMap& cMap)
 					if (cPlayer.GetDelay())
 					{
 						cPlayer.HitJumpBlockUpperSide();
+						cMap.ChangeTypeID(MapTipIndex);
 					}
 				}
 
