@@ -178,8 +178,8 @@ void CreateMap::EraseBlock()
 void CreateMap::SaveMapTip()
 {
 	FILE* fp = nullptr;
-	string FilePath = "data/Map/MapDataFile/";		//ファイルを入れる場所
-	string Extension = ".txt";						//拡張子
+	string FilePath = "data/Bloak/MapDataFile/";		//ファイルを入れる場所
+	string Extension = ".txt";							//拡張子
 
 	if (Input::Key::Keep(KEY_INPUT_S) && Input::Key::Keep(KEY_INPUT_LCONTROL))
 	{
@@ -202,7 +202,7 @@ void CreateMap::SaveMapTip()
 
 		string TextName = FileName + Extension;
 		//ファイルを開く(なければ新規作成
-		fopen_s(&fp, "data/Map/MapDataTextName.txt", "a+");
+		fopen_s(&fp, "data/Bloak/MapDataTextName.txt", "a+");
 		if (fp != nullptr)
 		{
 			//末尾に追加する
