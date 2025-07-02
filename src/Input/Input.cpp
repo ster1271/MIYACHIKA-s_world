@@ -141,7 +141,7 @@ bool Input::Conclusion(Type type)
 			return true;
 		break;
 	case Input::Type::NEXT:
-		if (Mouse::Push(MOUSE_INPUT_LEFT) || JoyPadInput::Push(PadInputState::X))
+		if (Key::Push(KEY_INPUT_SPACE) || JoyPadInput::Push(PadInputState::X))
 			return true;
 		break;
 	case Input::Type::HOLD_NEXT:

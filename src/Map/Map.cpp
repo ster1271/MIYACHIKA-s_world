@@ -1,7 +1,5 @@
 #include "Map.h"
 
-const float BASE_VALUE = 96.0f;
-
 //コンストラクタ
 CMap::CMap()
 {
@@ -78,7 +76,7 @@ bool CMap::LoadMap(MAP_TYPE id)
 			int FileNum = tmp - '0';
 
 			//必要な情報を格納
-			tmpInfo.cPos = VGet((float)FileIndexX * MAP_TIP_SIZE.x, BASE_VALUE + (float)FileIndexY * MAP_TIP_SIZE.y, MAP_TIP_SIZE.z);
+			tmpInfo.cPos = VGet(BASE_VALUE_X + (float)FileIndexX * MAP_TIP_SIZE.x, BASE_VALUE_Y + (float)FileIndexY * MAP_TIP_SIZE.y, MAP_TIP_SIZE.z);
 			tmpInfo.cRotate = VGet(0.0f, 0.0f, 0.0f);
 			tmpInfo.Type_Id = (MAPTIP_TYPE)FileNum;
 			tmpInfo.iHndl = LoadGraph(MapTipFilePath[FileNum]);
