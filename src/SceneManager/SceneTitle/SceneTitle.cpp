@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 // タイトルの名前
-constexpr char TITLE_NAME[] = "うんちぷりぷり";
+constexpr char TITLE_NAME[] = "ポッピーホッピン";
 
 // ゲームやめるボタンやスタートボタンの大きさ
 constexpr int BUTTON_SIZE[2] = { 320,108 };

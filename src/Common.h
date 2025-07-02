@@ -18,7 +18,7 @@ const unsigned int WHITE	 = GetColor(255, 255, 255);	// 白
 
 // スクリーンサイズ
 constexpr int	SCREEN_SIZE_X = 1280;	// X方向の画面サイズを指定
-constexpr int	SCREEN_SIZE_Y = 720;	// Y方向の画面サイズを指定
+constexpr int	SCREEN_SIZE_Y = 800;	// Y方向の画面サイズを指定
 
 // 画面サイズ半分
 constexpr int HALF_SCREEN_SIZE_X = SCREEN_SIZE_X / 2;
