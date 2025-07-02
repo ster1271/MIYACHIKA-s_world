@@ -1,6 +1,14 @@
 #pragma once
 #include "../Common.h"
 
+const int MAX_LEN = 256;
+
+const int MAX_MAPTIP_X = 30;
+const int MAX_MAPTIP_Y = 19;
+
+const float BASE_VALUE_X = 160.0f;
+const float BASE_VALUE_Y = 96.0f;
+
 const VECTOR MAP_TIP_SIZE = VGet(32.0f, 32.0f, 0.0f);
 // 35
 // 

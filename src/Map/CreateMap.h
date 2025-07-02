@@ -5,6 +5,8 @@
 class CreateMap
 {
 private:
+	int MouseX, MouseY;
+
 	int DataHndl[MAPTIP_TYPE_NUM];
 
 	int MapTipData[MAX_MAPTIP_Y][MAX_MAPTIP_X];	//全体マップ番号格納用
@@ -49,6 +51,12 @@ public:
 
 	//保存処理(text or CSV)
 	void SaveMapTip();
+
+	//DrawRota用
+	static bool WithinBox_Rota(int MousePosX, int MousePosY, VECTOR vPos, int WIDTH, int HEIGHT);
+
+	//DrawGraph用
+	static bool WithinBox(int MousePosX, int MousePosY, VECTOR vPos, int WIDTH, int HEIGHT);
 };
 
 
