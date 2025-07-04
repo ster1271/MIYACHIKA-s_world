@@ -1,5 +1,6 @@
 #pragma once
 #include "DxLib.h"
+#include "PlayerAnimation.h"
 
 // プレイヤーの移動方向
 enum PLAYER_DIRECTION {
@@ -26,7 +27,6 @@ const float PLAYER_SIZE = 32.0f;
 
 class CPlayer {
 private:
-	int m_iHndl;		// 画像ハンドル
 	float m_fPosX;		// X座標
 	float m_fPosY;		// Y座標
 	float m_fOldPosX;	// 移動前のX座標
@@ -40,6 +40,9 @@ private:
 
 	// ジャンプ力
 	PLAYER_JUMP_POWER m_eJumpPower;
+
+	// プレイヤーアニメーションクラスをインスタンス化
+	CPlayerAnimation cAnimation;
 
 public:
 	// コンストラクタ・デストラクタ
@@ -57,7 +60,7 @@ public:
 	//====================
 	//      　関数
 	//====================
-	
+
 	// 移動処理
 	void Move();
 
