@@ -19,9 +19,20 @@ public:
 		GRAPH_TYPE_JUMP1,
 		GRAPH_TYPE_JUMP2,
 		GRAPH_TYPE_JUMP3,
+		GRAPH_TYPE_COUNT1,
+		GRAPH_TYPE_COUNT2,
+		GRAPH_TYPE_COUNT3,
 		GRAPH_TYPE_LOGOGB,
 		GRAPH_TYPE_NUM
 	};
+
+	//// ボタンの状態
+	//enum BUTTON_STATUS {
+	//	BUTTON_STATUS_NONE=-1,
+	//	BUTTON_STATUS_LARGE,
+	//	BUTTON_STATUS_SMALL,
+	//	BUTTON_STATUS_NUM,
+	//};
 
 	void Init();
 	void Step();
@@ -36,6 +47,10 @@ private:
 	float m_LogoYSpeed;	// 速度
 	int m_LogoBoundCnt;	// はねた回数
 	bool m_isOffscreenBeen;	// 画面外に行ったか(行ったならタイトルを表示する)
+
+	double m_ButtonExRate[SELECTABLE_GRAPH_TYPE_NUM];
+	bool m_isButtonChangedExRate;
+
 
 	// 選択中画像
 	SELECTABLE_GRAPH_TYPE m_SelectedGraph;

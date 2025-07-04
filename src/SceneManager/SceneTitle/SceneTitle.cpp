@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 // タイトルの名前
-constexpr char TITLE_NAME[] = "ポッピーホッピン";
+constexpr char TITLE_NAME[] = "Hopin Popin";
 
 // ゲームやめるボタンやスタートボタンの大きさ
 constexpr int BUTTON_SIZE[2] = { 320,108 };
@@ -21,6 +21,12 @@ constexpr int LOGO_JUMP_NUM = 3;
 // タイトルロゴの重力
 constexpr float LOGO_JUMP_GRAVITY = 0.4f;
 
+// ボタンの最大サイズ
+constexpr double BUTTON_MAX_SIZE = 1.2f;
+
+// ボタンのサイズ変更速度
+constexpr double BUTTON_SIZE_CANGED_SPEED = 0.01f;
+
 // タイトルロゴのジャンプ力の高さ
 constexpr float LOGO_JUMP_POWER[LOGO_JUMP_NUM] = {
 	-10.0f,
@@ -30,8 +36,8 @@ constexpr float LOGO_JUMP_POWER[LOGO_JUMP_NUM] = {
 
 // ボタンの位置
 constexpr int BUTTON_POS[SceneTitle::SELECTABLE_GRAPH_TYPE_NUM][2] = {
-	{HALF_SCREEN_SIZE_X - BUTTON_SIZE[0] / 2,400},
-	{HALF_SCREEN_SIZE_X - BUTTON_SIZE[0] / 2,550},
+	{HALF_SCREEN_SIZE_X - BUTTON_SIZE[0] / 2,500},
+	{HALF_SCREEN_SIZE_X - BUTTON_SIZE[0] / 2,650},
 };
 
 // 画像のパス
@@ -43,6 +49,9 @@ constexpr char GRAPH_PATH[SceneTitle::GRAPH_TYPE_NUM][256] = {
 	"data/Bloak/JumpBlock1.png",
 	"data/Bloak/JumpBlock2.png",
 	"data/Bloak/JumpBlock3.png",
+	"data/Title/1.png",
+	"data/Title/2.png",
+	"data/Title/3.png",
 	"data/Title/SelectBG.png",
 };
 
@@ -57,6 +66,12 @@ void SceneTitle::Init()
 
 	m_LogoBoundCnt = 0;
 	m_LogoYSpeed = LOGO_JUMP_POWER[m_LogoBoundCnt];
+	for (int i = 0; i < SELECTABLE_GRAPH_TYPE_NUM; i++) {
+		m_ButtonExRate[i] = 1.0f;
+		if (i == m_SelectedGraph)m_ButtonExRate[i] = BUTTON_MAX_SIZE;
+	}
+	m_isButtonChangedExRate = false;
+
 	for (int i = 0; i < GRAPH_TYPE_NUM; i++) {
 		if (m_Hndl[i] == -1)continue;
 		m_Hndl[i] = -1;
@@ -81,11 +96,41 @@ void SceneTitle::Step()
 		if (m_SelectedGraph < SELECTABLE_GRAPH_TYPE_START) {
 			m_SelectedGraph = SELECTABLE_GRAPH_TYPE_START;
 		}
+		else {
+			m_isButtonChangedExRate = true;
+		}
 	}
 	else if (Input::Conclusion(Input::Type::MOVE_DOWN)) {
 		m_SelectedGraph = static_cast<SELECTABLE_GRAPH_TYPE>(m_SelectedGraph + 1);
 		if (m_SelectedGraph > SELECTABLE_GRAPH_TYPE_END) {
 			m_SelectedGraph = SELECTABLE_GRAPH_TYPE_END;
+		}
+		else {
+			m_isButtonChangedExRate = true;
+		}
+	}
+
+	// ボタンのサイズが変更中なら変えてやる
+	if (m_isButtonChangedExRate) {
+		if (m_SelectedGraph == SELECTABLE_GRAPH_TYPE_START) {
+			m_ButtonExRate[SELECTABLE_GRAPH_TYPE_START] += BUTTON_SIZE_CANGED_SPEED;
+			m_ButtonExRate[SELECTABLE_GRAPH_TYPE_END] -= BUTTON_SIZE_CANGED_SPEED;
+			if (m_ButtonExRate[SELECTABLE_GRAPH_TYPE_START] > BUTTON_MAX_SIZE &&
+				m_ButtonExRate[SELECTABLE_GRAPH_TYPE_END] < 1.0f) {
+				m_ButtonExRate[SELECTABLE_GRAPH_TYPE_START] = BUTTON_MAX_SIZE;
+				m_ButtonExRate[SELECTABLE_GRAPH_TYPE_END] = 1.0f;
+				m_isButtonChangedExRate = false;
+			}
+		}
+		if (m_SelectedGraph == SELECTABLE_GRAPH_TYPE_END) {
+			m_ButtonExRate[SELECTABLE_GRAPH_TYPE_START] -= BUTTON_SIZE_CANGED_SPEED;
+			m_ButtonExRate[SELECTABLE_GRAPH_TYPE_END] += BUTTON_SIZE_CANGED_SPEED;
+			if (m_ButtonExRate[SELECTABLE_GRAPH_TYPE_START] < 1.0f &&
+				m_ButtonExRate[SELECTABLE_GRAPH_TYPE_END] > BUTTON_MAX_SIZE) {
+				m_ButtonExRate[SELECTABLE_GRAPH_TYPE_START] = 1.0f;
+				m_ButtonExRate[SELECTABLE_GRAPH_TYPE_END] = BUTTON_MAX_SIZE;
+				m_isButtonChangedExRate = false;
+			}
 		}
 	}
 
@@ -131,11 +176,11 @@ void SceneTitle::Draw()
 	};
 
 	// 選択画像
-	DrawGraph(ButtonPos1[m_SelectedGraph][0], ButtonPos1[m_SelectedGraph][1], m_Hndl[GRAPH_TYPE_LOGOGB], true);
+	DrawRotaGraph(HALF_SCREEN_SIZE_X, ButtonPos1[m_SelectedGraph][1], m_ButtonExRate[m_SelectedGraph], 0.0f, m_Hndl[GRAPH_TYPE_LOGOGB], true);
 	
 	// ボタン描画
 	for (int GraphIndex = 0; GraphIndex < SELECTABLE_GRAPH_TYPE_NUM; GraphIndex++) {
-		DrawGraph(ButtonPos1[GraphIndex][0], ButtonPos1[GraphIndex][1], m_Hndl[GRAPH_TYPE_START + GraphIndex], true);
+		DrawRotaGraph(HALF_SCREEN_SIZE_X, ButtonPos1[GraphIndex][1], m_ButtonExRate[GraphIndex], 0.0f, m_Hndl[GRAPH_TYPE_START + GraphIndex], true);
 	}
 
 	// いったん文字表示
@@ -143,7 +188,7 @@ void SceneTitle::Draw()
 
 	DebugString* dbgstr = DebugString::GetInstance();
 	if (!m_isOffscreenBeen) {
-		dbgstr->AddFormatString(logopos[0] - 16, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%d", m_LogoBoundCnt + 1);
+		DrawRotaGraph(logopos[0], logopos[1] + 32, 1.5f, 0.0f, m_Hndl[GRAPH_TYPE_COUNT1 + m_LogoBoundCnt], true);
 	}
 	else {
 		string str = TITLE_NAME;

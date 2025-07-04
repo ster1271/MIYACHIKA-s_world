@@ -31,9 +31,9 @@ void CMap::Exit()
 }
 
 //“Ç‚İ‚İ
-void CMap::Load(MAP_TYPE id)
+void CMap::Load(int Index)
 {
-	LoadMap(id);
+	LoadMap(Index);
 }
 
 //î•ñXV

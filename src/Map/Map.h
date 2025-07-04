@@ -85,7 +85,7 @@ public:
 
 	//読み込み
 	//引数：マップデータの種類
-	void Load(MAP_TYPE id);
+	void Load(int Index);
 
 	//情報更新
 	void UpData();
