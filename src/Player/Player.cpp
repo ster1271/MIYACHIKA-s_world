@@ -5,9 +5,6 @@
 //==================================================
 // 定義関連
 
-// プレイヤーの画像ファイルパス
-const char PLAYER_FILE_PATH[] = { "data/Player/プレイヤー(仮).png" };
-
 // プレイヤー速度
 const float SPEED = 2.0f;
 
@@ -28,7 +25,6 @@ const int DELAY_NUM = 30;
 // コンストラクタ・デストラクタ
 CPlayer::CPlayer()
 {
-	m_iHndl = -1;
 	m_eJumpPower = JUMP_POWER_1;
 	m_fPosX = 0.0f;
 	m_fPosY = 0.0f;
@@ -48,11 +44,12 @@ CPlayer::~CPlayer() {}
 // 初期化
 void CPlayer::Init(VECTOR vStartPos)
 {
-	m_iHndl = LoadGraph(PLAYER_FILE_PATH);
 	m_fPosX = vStartPos.x;
 	m_fPosY = vStartPos.y;
 	m_fSpeed = SPEED;
 	m_fYSpeed = MAX_JUMP_Y[m_eJumpPower];
+
+	cAnimation.Init(m_fPosX, m_fPosY);
 }
 
 // 通常処理
@@ -62,24 +59,25 @@ void CPlayer::Step()
 	Jump();
 	Direction();
 	AddDelayCnt();
+
+	cAnimation.Step();
 }
 
 // 描画処理
 void CPlayer::Draw()
 {
-	DrawGraph((int)m_fPosX, (int)m_fPosY, m_iHndl, true);
+	cAnimation.Draw();
 }
 
 // 終了処理
 void CPlayer::Fin()
 {
-	DeleteGraph(m_iHndl);
-	m_iHndl = -1;
-
 	m_fPosX = 0.0f;
 	m_fPosY = 0.0f;
 	m_fSpeed = 0.0f;
 	m_fYSpeed = 0.0f;
+
+	cAnimation.Fin();
 }
 
 // 更新処理
@@ -87,6 +85,8 @@ void CPlayer::Update()
 {
 	m_fOldPosX = m_fPosX;
 	m_fOldPosY = m_fPosY;
+
+	cAnimation.Update(m_fPosX, m_fPosY);
 
 	for (int i = 0; i < PLAYER_DIRECTION_NUM; i++)
 	{
@@ -105,10 +105,29 @@ void CPlayer::Move()
 	if (Input::Key::Keep(KEY_INPUT_A))
 	{
 		m_fPosX -= SPEED;
+		cAnimation.isRight(false);
+		if (cAnimation.GetID() != PLAYER_STATE::JUMP)
+		{
+			cAnimation.ChangeID(PLAYER_STATE::WALK);
+		}
 	}
+	// 右に動く
 	else if (Input::Key::Keep(KEY_INPUT_D))
 	{
 		m_fPosX += SPEED;
+		cAnimation.isRight(true);
+		if (cAnimation.GetID() != PLAYER_STATE::JUMP)
+		{
+			cAnimation.ChangeID(PLAYER_STATE::WALK);
+		}
+	}
+	// 動いていなかったら
+	else
+	{
+		if (cAnimation.GetID() != PLAYER_STATE::JUMP)
+		{
+			cAnimation.ChangeID(PLAYER_STATE::FRONT);
+		}
 	}
 }
 
@@ -124,6 +143,10 @@ void CPlayer::Jump()
 	if (m_fYSpeed < MAX_JUMP_Y[m_eJumpPower])
 	{
 		m_fYSpeed += GRAVITY;
+	}
+	else
+	{
+		cAnimation.ChangeID(PLAYER_STATE::FRONT);
 	}
 
 	m_fPosY += m_fYSpeed;
@@ -143,12 +166,12 @@ void CPlayer::Direction()
 		m_bDir[PLAYER_DOWN] = true;
 	}
 	// 左方向のチェック
-	if (m_fPosX < m_fOldPosX) 
+	if (m_fPosX < m_fOldPosX)
 	{
 		m_bDir[PLAYER_LEFT] = true;
 	}
 	// 右方向のチェック
-	if (m_fPosX > m_fOldPosX) 
+	if (m_fPosX > m_fOldPosX)
 	{
 		m_bDir[PLAYER_RIGHT] = true;
 	}
@@ -183,6 +206,11 @@ void CPlayer::HitUpperSide()
 void CPlayer::HitLowerSide()
 {
 	m_fYSpeed = MIN_YSPEED;
+
+	if (cAnimation.GetID() != PLAYER_STATE::WALK)
+	{
+		cAnimation.ChangeID(PLAYER_STATE::FRONT);
+	}
 }
 
 // ジャンプブロックに当たった時
@@ -190,6 +218,7 @@ void CPlayer::HitJumpBlock(PLAYER_JUMP_POWER JumpPower)
 {
 	m_eJumpPower = JumpPower;
 	m_fYSpeed = -MAX_JUMP_Y[m_eJumpPower];
+	cAnimation.ChangeID(PLAYER_STATE::JUMP);
 	m_iDelayCnt = 0;
 }
 
