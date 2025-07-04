@@ -34,15 +34,15 @@ static const char MapFilePath[MAP_MAX_NUM][256]
 //マップ素材データの種類
 const enum MAPTIP_TYPE
 {
-	MAPTIP_TYPE_NONE = -1,
+	MAPTIP_TYPE_NONE = -1,	//(エディター中は消しゴムの役割をする)
 
-	MAPTIP_TYPE_00,		// ブロック
-	MAPTIP_TYPE_01,		// ジャンプブロック1
-	MAPTIP_TYPE_02,		// ジャンプブロック2
-	MAPTIP_TYPE_03,		// ジャンプブロック3
-	MAPTIP_TYPE_04,		// とげ
-	MAPTIP_TYPE_05,		// スタート
-	MAPTIP_TYPE_06,		// ゴール
+	MAPTIP_TYPE_00,			// ブロック
+	MAPTIP_TYPE_01,			// ジャンプブロック1
+	MAPTIP_TYPE_02,			// ジャンプブロック2
+	MAPTIP_TYPE_03,			// ジャンプブロック3
+	MAPTIP_TYPE_04,			// とげ
+	MAPTIP_TYPE_05,			// スタート
+	MAPTIP_TYPE_06,			// ゴール
 
 	MAPTIP_TYPE_NUM,
 };

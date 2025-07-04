@@ -2,18 +2,18 @@
 #include "../Input/Input.h"
 #include "../Debug/DebugString.h"
 
+const char ERASE[256] = { "data/Bloak/消しゴム.png" };
+
 //コンストラクタ
 CreateMap::CreateMap()
 {
 	MouseX = MouseY = 0.0f;
-	SetBlockNum = -1;
-	In_Entry = false;
-	IsFinish = false;
 
 	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 	{
 		DataHndl[Index] = -1;
 	}
+	EraseHndl = -1;
 
 	for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
 	{
@@ -22,6 +22,11 @@ CreateMap::CreateMap()
 			MapTipData[IndexY][IndexX] = -1;
 		}
 	}
+
+	SetBlockNum = -1;
+	IsEditer = false;
+	In_Entry = false;
+	IsFinish = false;
 }
 
 //デストラクタ
@@ -36,6 +41,7 @@ void CreateMap::Init()
 	{
 		DataHndl[Index] = -1;
 	}
+	EraseHndl = -1;
 
 	for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
 	{
@@ -46,6 +52,7 @@ void CreateMap::Init()
 	}
 
 	SetBlockNum = -1;
+	IsEditer = false;
 	In_Entry = false;
 	IsFinish = false;
 }
@@ -55,7 +62,24 @@ void CreateMap::Exit()
 {
 	MouseX = MouseY = 0.0f;
 
-	SetBlockNum = 0;
+	MouseX = MouseY = 0.0f;
+
+	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
+	{
+		DataHndl[Index] = -1;
+	}
+	EraseHndl = -1;
+
+	for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
+	{
+		for (int IndexX = 0; IndexX < MAX_MAPTIP_X; IndexX++)
+		{
+			MapTipData[IndexY][IndexX] = -1;
+		}
+	}
+
+	SetBlockNum = -1;
+	IsEditer = false;
 	In_Entry = false;
 	IsFinish = false;
 }
@@ -67,6 +91,8 @@ void CreateMap::Load()
 	{
 		DataHndl[Index] = LoadGraph(MapTipFilePath[Index]);
 	}
+
+	EraseHndl = LoadGraph(ERASE);
 }
 
 //描画
@@ -81,6 +107,9 @@ void CreateMap::Draw()
 				BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x + MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y + MAP_TIP_SIZE.y,
 				WHITE, false);
 
+			if (MapTipData[IndexY][IndexX] == MAPTIP_TYPE_NONE)
+				continue;
+
 			DrawGraph(BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, DataHndl[MapTipData[IndexY][IndexX]], false);
 		}
 	}
@@ -88,8 +117,10 @@ void CreateMap::Draw()
 	//ブロックの種類描画
 	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 	{
-		DrawRotaGraph(70, 150 + 60 * Index, 1.5f, 0.0f, DataHndl[Index], false, false);
+		DrawRotaGraph(70, 210 + 60 * Index, 1.5f, 0.0f, DataHndl[Index], false, false);
 	}
+
+	DrawRotaGraph(70, 150, 1.5f, 0.0f, EraseHndl, false, false);
 }
 
 //処理
@@ -118,11 +149,20 @@ void CreateMap::SelectBlock()
 		for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 		{
 			//マウス座標が選びたいブロックの範囲内なら
-			if (CreateMap::WithinBox_Rota(MouseX, MouseY, VGet(70.0f, 150.0f + 60.0f * Index, 0.0f), 48, 48))
+			if (CreateMap::WithinBox_Rota(MouseX, MouseY, VGet(70.0f, 210.0f + 60.0f * Index, 0.0f), 48, 48))
 			{
 				//選びたいブロックの番号を格納する
 				SetBlockNum = Index;
 			}
+		}
+	}
+
+	if (Input::Mouse::Keep(MOUSE_INPUT_LEFT))
+	{
+		if (CreateMap::WithinBox_Rota(MouseX, MouseY, VGet(70.0f, 150.0f, 0.0f), 48, 48))
+		{
+			//選びたいブロックの番号を格納する
+			SetBlockNum = -1;
 		}
 	}
 }
@@ -155,7 +195,7 @@ void CreateMap::EraseBlock()
 	if (Input::Mouse::Keep(MOUSE_INPUT_LEFT))
 	{
 		//選択ブロックが消しゴムじゃないなら処理しない
-		if (SetBlockNum != 0)
+		if (SetBlockNum != -1)
 			return;
 
 		for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
@@ -231,12 +271,6 @@ void CreateMap::SaveMapTip()
 		{
 			//別変数に値を渡す
 			SaveData[DataIndexY][DataIndexX] = MapTipData[DataIndexY][DataIndexX];
-
-			//諸事情で - 1を0に変更させる
-			if (SaveData[DataIndexY][DataIndexX] == -1)
-			{
-				SaveData[DataIndexY][DataIndexX] = 0;
-			}
 		}
 	}
 
@@ -255,9 +289,20 @@ void CreateMap::SaveMapTip()
 		//文字コードに対応するように値を変更する
 		int ConvertingValue = SaveData[IndexY][IndexX] + 48;
 
-		//文字読み込む
-		fputc(ConvertingValue, fp);
-		IndexX++;
+		//文字読み込み
+		if (SaveData[IndexY][IndexX] != -1)
+		{
+			//数字の書き込み
+			fputc(ConvertingValue, fp);
+			IndexX++;
+		}
+		else
+		{
+			//-1の時は空白を書き込み
+			fputc(' ', fp);
+			IndexX++;
+		}
+		
 	
 		if (IndexX == MAX_MAPTIP_X)
 		{

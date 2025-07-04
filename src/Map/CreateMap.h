@@ -8,6 +8,7 @@ private:
 	int MouseX, MouseY;
 
 	int DataHndl[MAPTIP_TYPE_NUM];
+	int EraseHndl;
 
 	int MapTipData[MAX_MAPTIP_Y][MAX_MAPTIP_X];	//全体マップ番号格納用
 	int SetBlockNum;							//選択ブロック番号
