@@ -1,5 +1,6 @@
 #pragma once
 #include "../Common.h"
+#include <iostream>
 
 const int MAX_LEN = 256;
 
@@ -64,6 +65,7 @@ class CMap
 {
 public:
 	FILE* fp;
+	string Path;
 
 	struct MapTipInfo
 	{
@@ -102,10 +104,13 @@ public:
 	void Draw();
 
 	//マップの読み込み
-	bool LoadMap(MAP_TYPE id);
+	bool LoadMap(int Index);
 
 	// マップチップの種類を変更
 	void ChangeTypeID(int iMapTipNum);
+
+	//読み込むマップの名前取得
+	bool GetMapName(int MapIndex);
 
 	//====================
 	//   取得・設定関連
@@ -120,4 +125,5 @@ public:
 
 	// プレイヤーの大きさ
 	int GetMapTipNum() { return MapTipList.size(); }
+
 };

@@ -1,5 +1,7 @@
 #include "Map.h"
 
+const char MAP_DATA_NEME_PATH[MAX_LEN] = { "data/Bloak/MapDataTextName.txt" };	//マップの名前格納テキスト
+
 //コンストラクタ
 CMap::CMap()
 {
@@ -58,11 +60,16 @@ void CMap::Draw()
 
 
 //マップの読み込み
-bool CMap::LoadMap(MAP_TYPE id)
+bool CMap::LoadMap(int Index)
 {
+	//ファイル名が取得できなかったら以下の処理をしない
+	if (!GetMapName(Index))
+		return false;
+
+	fp = nullptr;
 	MapTipInfo tmpInfo;
 
-	fopen_s(&fp, MapFilePath[id], "r");
+	fopen_s(&fp, Path.c_str(), "r");
 
 	if (fp != nullptr)
 	{
@@ -135,4 +142,37 @@ void CMap::ChangeTypeID(int iMapTipNum)
 		MapTipList[iMapTipNum].Type_Id = MAPTIP_TYPE_01;
 		MapTipList[iMapTipNum].iHndl = LoadGraph(MapTipFilePath[MAPTIP_TYPE_01]);
 	}
+}
+
+
+//読み込むマップの名前取得
+bool CMap::GetMapName(int MapIndex)
+{
+	fp = nullptr;
+	Path = "data/Bloak/MapDataFile/";
+
+	fopen_s(&fp, MAP_DATA_NEME_PATH, "r");
+
+	if (fp != nullptr)
+	{
+		char TextName[MAX_LEN] = { 0 };
+		unsigned int NameSize = (unsigned int)sizeof(TextName);
+
+		int cnt = 0;
+		while (cnt <= MapIndex)
+		{
+			fscanf_s(fp, "%s", TextName, NameSize);
+			cnt++;
+		}
+		Path = Path + (string)TextName;
+
+		fclose(fp);
+	}
+	else
+	{
+		//ファイル読み込み失敗時
+		return false;
+	}
+
+	return true;
 }
