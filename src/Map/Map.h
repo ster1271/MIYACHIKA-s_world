@@ -24,13 +24,6 @@ enum MAP_TYPE
 	MAP_MAX_NUM,		//ステージ最大数
 };
 
-//マップデータのファイルパス
-static const char MapFilePath[MAP_MAX_NUM][256]
-{
-	"data/Bloak/Map1.txt",
-	"data/Bloak/Map2.txt",
-	"data/Bloak/Map3.txt",
-};
 
 //マップ素材データの種類
 const enum MAPTIP_TYPE
