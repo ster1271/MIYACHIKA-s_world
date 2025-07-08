@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "../Common.h"
 #include "../Input/Input.h"
+#include "PlayerData.h"
+
 
 //==================================================
 // 定義関連
@@ -18,7 +20,7 @@ const float MIN_YSPEED = 0.3;
 const float MAX_JUMP_Y[PLAYER_JUMP_POWER_NUM] = { 2.7f,3.65f,4.5f };
 
 // この値分ディレイする
-const int DELAY_NUM = 30;
+const int DELAY_NUM = 20;
 
 //==================================================
 
@@ -50,6 +52,7 @@ void CPlayer::Init(VECTOR vStartPos)
 	m_fYSpeed = MAX_JUMP_Y[m_eJumpPower];
 
 	cAnimation.Init(m_fPosX, m_fPosY);
+	CPlayerData::Init();
 }
 
 // 通常処理
@@ -67,6 +70,10 @@ void CPlayer::Step()
 void CPlayer::Draw()
 {
 	cAnimation.Draw();
+
+	DrawFormatString(0,  60, GREEN, "ジャンプ回数 : %d", CPlayerData::GetInstance()->GetJumpCnt());
+	DrawFormatString(0,  80, GREEN, "クリア回数　 : %d", CPlayerData::GetInstance()->GetClearStage());
+	DrawFormatString(0, 100, GREEN, "死んだ回数　 : %d", CPlayerData::GetInstance()->GetDeathCnt());
 }
 
 // 終了処理
@@ -78,6 +85,7 @@ void CPlayer::Fin()
 	m_fYSpeed = 0.0f;
 
 	cAnimation.Fin();
+	CPlayerData::DeleteInstance();
 }
 
 // 更新処理
@@ -207,8 +215,10 @@ void CPlayer::HitLowerSide()
 {
 	m_fYSpeed = MIN_YSPEED;
 
+	// 歩いていなかったら
 	if (cAnimation.GetID() != PLAYER_STATE::WALK)
 	{
+		// 前を向く
 		cAnimation.ChangeID(PLAYER_STATE::FRONT);
 	}
 }
@@ -220,12 +230,37 @@ void CPlayer::HitJumpBlock(PLAYER_JUMP_POWER JumpPower)
 	m_fYSpeed = -MAX_JUMP_Y[m_eJumpPower];
 	cAnimation.ChangeID(PLAYER_STATE::JUMP);
 	m_iDelayCnt = 0;
+
+	// ジャンプ数を加算
+	CPlayerData::GetInstance()->AddJumpCnt();
 }
 
 // プレイヤーの上側がジャンプブロックに当たった時
 void CPlayer::HitJumpBlockUpperSide()
 {
 	m_iDelayCnt = 0;
+}
+
+// とげに当たったら
+void CPlayer::HitThorn(float fStartPosX, float fStartPosY)
+{
+	// スタート位置に戻す
+	m_fPosX = fStartPosX;
+	m_fPosY = fStartPosY;
+
+	// 死亡数を加算
+	CPlayerData::GetInstance()->AddDeathCnt();
+}
+
+// ゴールに当たったら
+void CPlayer::HitGoal(float fStartPosX, float fStartPosY)
+{
+	// スタート位置に設定する
+	m_fPosX = fStartPosX;
+	m_fPosY = fStartPosY;
+
+	// クリア数を加算
+	CPlayerData::GetInstance()->AddClearStage();
 }
 
 //====================

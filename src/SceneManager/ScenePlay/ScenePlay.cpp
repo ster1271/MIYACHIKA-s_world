@@ -79,4 +79,5 @@ void ScenePlay::Collision()
 	CollisionManager::CheckHitPlayerToMap(cPlayer, cMap);
 	CollisionManager::CheckHitPlayerToJumpBlock(cPlayer, cMap);
 	CollisionManager::CheckHitPlayerToThorn(cPlayer, cMap);
+	CollisionManager::CheckHitPlayerToGoal(cPlayer, cMap);
 }

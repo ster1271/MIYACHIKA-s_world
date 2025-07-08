@@ -89,6 +89,12 @@ public:
 	// プレイヤーの上側がジャンプブロックに当たった時
 	void HitJumpBlockUpperSide();
 
+	// とげに当たったら
+	void HitThorn(float fStartPosX, float fStartPosY);
+
+	// ゴールに当たったら
+	void HitGoal(float fStartPosX, float fStartPosY);
+
 	//====================
 	//   取得・設定関連
 	//====================
