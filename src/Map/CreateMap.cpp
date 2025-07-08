@@ -123,7 +123,7 @@ void CreateMap::Draw()
 		DrawRotaGraph(70, 210 + 60 * Index, 1.5f, 0.0f, DataHndl[Index], false, false);
 	}
 
-	//マウスに追従するよ～～～
+	//マウスに追従と選択ブロック描画
 	if (SetBlockNum == -1)
 	{
 		DrawRotaGraph(650, 35, 1.5f, -DX_PI_F / 4, EraseHndl, false, false);
@@ -134,8 +134,6 @@ void CreateMap::Draw()
 		DrawRotaGraph(650 , 35, 1.5f, 0.0f, DataHndl[SetBlockNum], false, false);
 		DrawRotaGraph(MouseX, MouseY, 1.0f, 0.0f, DataHndl[SetBlockNum], false, false);
 	}
-
-	//選択中のブロック描画
 }
 
 //本処理
