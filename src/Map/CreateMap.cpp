@@ -126,6 +126,9 @@ void CreateMap::Draw()
 //処理
 void CreateMap::Step()
 {	
+	// デバッグ文字表示用
+	DebugString* dbgStr = DebugString::GetInstance();
+
 	GetMousePoint(&MouseX, &MouseY);
 
 	//設置するブロック選択処理
@@ -138,6 +141,12 @@ void CreateMap::Step()
 	EraseBlock();
 
 	SaveMapTip();
+
+	//エディターモード
+
+	dbgStr->AddString(0, 0, FontType::HGP創英角ポップ体24, WHITE, "エディターモードです");
+	dbgStr->AddString(0, 24, FontType::HGP創英角ポップ体24, WHITE, "SHIFTでプレイシーン");
+	dbgStr->AddFormatString(0, 48, FontType::HGP創英角ポップ体24, WHITE, "選択中のブロック番号：%d", cCreateMap.GetBlockNum());
 }
 
 

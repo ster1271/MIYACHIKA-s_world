@@ -38,10 +38,6 @@ void ScenePlay::Step()
 
 	if (cCreateMap.GetIsEditer())
 	{
-		//エディターモード
-		dbgStr->AddString(0, 0, FontType::HGP創英角ポップ体24, WHITE, "エディターモードです");
-		dbgStr->AddString(0, 24, FontType::HGP創英角ポップ体24, WHITE, "SHIFTでプレイシーン");
-		dbgStr->AddFormatString(0, 48, FontType::HGP創英角ポップ体24, WHITE, "選択中のブロック番号：%d", cCreateMap.GetBlockNum());
 		cCreateMap.Step();
 		return;
 	}
@@ -49,7 +45,7 @@ void ScenePlay::Step()
 	{
 		//通常プレイモード(ここに処理を追加してください)
 		dbgStr->AddString(0, 0, FontType::HGP創英角ポップ体24, WHITE, "プレイです");
-		dbgStr->AddString(0, 24, FontType::HGP創英角ポップ体24, WHITE, "左クリックもしくはコントローラ×ボタンでクリアに");
+		dbgStr->AddString(0, 24, FontType::HGP創英角ポップ体24, WHITE, "LShiftでエディターモードに変更");
 
 		cPlayer.Step();
 		cMap.Step();
