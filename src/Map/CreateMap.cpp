@@ -4,16 +4,17 @@
 
 const char ERASE[256] = { "data/Bloak/消しゴム.png" };
 
+
 //コンストラクタ
 CreateMap::CreateMap()
 {
 	MouseX = MouseY = 0.0f;
 
+	EraseHndl = -1;
 	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 	{
 		DataHndl[Index] = -1;
 	}
-	EraseHndl = -1;
 
 	for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
 	{
@@ -37,11 +38,11 @@ void CreateMap::Init()
 {
 	MouseX = MouseY = 0.0f;
 
+	EraseHndl = -1;
 	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 	{
 		DataHndl[Index] = -1;
 	}
-	EraseHndl = -1;
 
 	for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
 	{
@@ -62,13 +63,11 @@ void CreateMap::Exit()
 {
 	MouseX = MouseY = 0.0f;
 
-	MouseX = MouseY = 0.0f;
-
+	EraseHndl = -1;
 	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 	{
 		DataHndl[Index] = -1;
 	}
-	EraseHndl = -1;
 
 	for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
 	{
@@ -87,12 +86,11 @@ void CreateMap::Exit()
 //読み込み
 void CreateMap::Load()
 {
+	EraseHndl = LoadGraph(ERASE);
 	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 	{
 		DataHndl[Index] = LoadGraph(MapTipFilePath[Index]);
 	}
-
-	EraseHndl = LoadGraph(ERASE);
 }
 
 //描画
@@ -103,32 +101,50 @@ void CreateMap::Draw()
 	{
 		for (int IndexX = 0; IndexX < MAX_MAPTIP_X; IndexX++)
 		{
+			//枠線
 			DrawBox(BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y,
 				BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x + MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y + MAP_TIP_SIZE.y,
 				WHITE, false);
 
+			//値が-1なら描画しない
 			if (MapTipData[IndexY][IndexX] == MAPTIP_TYPE_NONE)
 				continue;
 
+			//設置したブロック
 			DrawGraph(BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, DataHndl[MapTipData[IndexY][IndexX]], false);
 		}
 	}
 
-	//ブロックの種類描画
+	//消しゴム描画
+	DrawRotaGraph(70, 150, 1.5f, -DX_PI_F / 4, EraseHndl, false, false);
 	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 	{
+		//選択用ブロックの描画
 		DrawRotaGraph(70, 210 + 60 * Index, 1.5f, 0.0f, DataHndl[Index], false, false);
 	}
 
-	DrawRotaGraph(70, 150, 1.5f, 0.0f, EraseHndl, false, false);
+	//マウスに追従するよ～～～
+	if (SetBlockNum == -1)
+	{
+		DrawRotaGraph(650, 35, 1.5f, -DX_PI_F / 4, EraseHndl, false, false);
+		DrawRotaGraph(MouseX + 5, MouseY + 5, 1.0f, -DX_PI_F / 4, EraseHndl, false, false);
+	}
+	else
+	{
+		DrawRotaGraph(650 , 35, 1.5f, 0.0f, DataHndl[SetBlockNum], false, false);
+		DrawRotaGraph(MouseX, MouseY, 1.0f, 0.0f, DataHndl[SetBlockNum], false, false);
+	}
+
+	//選択中のブロック描画
 }
 
-//処理
+//本処理
 void CreateMap::Step()
 {	
 	// デバッグ文字表示用
 	DebugString* dbgStr = DebugString::GetInstance();
 
+	//マウス座標取得
 	GetMousePoint(&MouseX, &MouseY);
 
 	//設置するブロック選択処理
@@ -140,13 +156,13 @@ void CreateMap::Step()
 	//ブロック削除処理
 	EraseBlock();
 
+	//マップチップの保存処理
 	SaveMapTip();
-
-	//エディターモード
 
 	dbgStr->AddString(0, 0, FontType::HGP創英角ポップ体24, WHITE, "エディターモードです");
 	dbgStr->AddString(0, 24, FontType::HGP創英角ポップ体24, WHITE, "SHIFTでプレイシーン");
-	dbgStr->AddFormatString(0, 48, FontType::HGP創英角ポップ体24, WHITE, "選択中のブロック番号：%d", cCreateMap.GetBlockNum());
+	dbgStr->AddString(0, 48, FontType::HGP創英角ポップ体24, WHITE, "LCtrl + Sで保存モードに");
+	dbgStr->AddString(400, 24, FontType::HGP創英角ポップ体24, WHITE, "選択中のブロック：");
 }
 
 
@@ -170,7 +186,7 @@ void CreateMap::SelectBlock()
 	{
 		if (CreateMap::WithinBox_Rota(MouseX, MouseY, VGet(70.0f, 150.0f, 0.0f), 48, 48))
 		{
-			//選びたいブロックの番号を格納する
+			//選びたいブロックの番号を格納する(消しゴム)
 			SetBlockNum = -1;
 		}
 	}
@@ -238,7 +254,7 @@ void CreateMap::SaveMapTip()
 	if (In_Entry && !IsFinish)
 	{
 		DrawString(0, 0, "ファイル名作成中...", WHITE);
-		DrawString(0, 16, "Enterで入力を終わる", WHITE);
+		DrawString(0, 16, "Enterで入力を終わる(正常に終了後、プレイシーンに戻る)", WHITE);
 		DrawString(0, 32, "Escで入力をキャンセル", WHITE);
 
 		char FileName[128];
