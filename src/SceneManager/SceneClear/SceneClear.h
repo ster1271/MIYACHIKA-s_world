@@ -1,5 +1,6 @@
 #pragma once
 #include "../SceneBace/SceneBace.h"
+#include "../../Common.h"
 
 class SceneClear :public SceneBace
 {
@@ -14,7 +15,13 @@ public:
 
 	};
 private:
+	struct Goal {
+		int	m_Pos[2];
+	};
+
 	int m_Hndl[GRAPH_TYPE_NUM];	// ‰æ‘œƒnƒ“ƒhƒ‹
+
+	vector<Goal> m_GoalVec;
 public:
 	void Init();
 	void Step();

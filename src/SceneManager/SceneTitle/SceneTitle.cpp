@@ -43,7 +43,7 @@ constexpr int BUTTON_POS[SceneTitle::SELECTABLE_GRAPH_TYPE_NUM][2] = {
 // 画像のパス
 constexpr char GRAPH_PATH[SceneTitle::GRAPH_TYPE_NUM][256] = {
 	"data/Bloak/JumpBlock1.png",
-	"data/Bloak/JumpBlock1.png",
+	"data/Title/Title.png",
 	"data/Title/Start.png",
 	"data/Title/Leave.png",
 	"data/Bloak/JumpBlock1.png",
@@ -91,22 +91,24 @@ void SceneTitle::Step()
 	//dbgStr->AddString(0, 24, FontType::HGP創英角ポップ体24, WHITE, "左クリックもしくはコントローラ×ボタンでプレイに");
 
 	//上下で選択を変える
-	if (Input::Conclusion(Input::Type::MOVE_UP)) {
-		m_SelectedGraph = static_cast<SELECTABLE_GRAPH_TYPE>(m_SelectedGraph - 1);
-		if (m_SelectedGraph < SELECTABLE_GRAPH_TYPE_START) {
-			m_SelectedGraph = SELECTABLE_GRAPH_TYPE_START;
+	if (m_LogoBoundCnt == LOGO_JUMP_NUM) {
+		if (Input::Conclusion(Input::Type::MOVE_UP)) {
+			m_SelectedGraph = static_cast<SELECTABLE_GRAPH_TYPE>(m_SelectedGraph - 1);
+			if (m_SelectedGraph < SELECTABLE_GRAPH_TYPE_START) {
+				m_SelectedGraph = SELECTABLE_GRAPH_TYPE_START;
+			}
+			else {
+				m_isButtonChangedExRate = true;
+			}
 		}
-		else {
-			m_isButtonChangedExRate = true;
-		}
-	}
-	else if (Input::Conclusion(Input::Type::MOVE_DOWN)) {
-		m_SelectedGraph = static_cast<SELECTABLE_GRAPH_TYPE>(m_SelectedGraph + 1);
-		if (m_SelectedGraph > SELECTABLE_GRAPH_TYPE_END) {
-			m_SelectedGraph = SELECTABLE_GRAPH_TYPE_END;
-		}
-		else {
-			m_isButtonChangedExRate = true;
+		else if (Input::Conclusion(Input::Type::MOVE_DOWN)) {
+			m_SelectedGraph = static_cast<SELECTABLE_GRAPH_TYPE>(m_SelectedGraph + 1);
+			if (m_SelectedGraph > SELECTABLE_GRAPH_TYPE_END) {
+				m_SelectedGraph = SELECTABLE_GRAPH_TYPE_END;
+			}
+			else {
+				m_isButtonChangedExRate = true;
+			}
 		}
 	}
 
@@ -135,14 +137,16 @@ void SceneTitle::Step()
 	}
 
 	// 次ボタンを押すと選択中のもので結果を変える
-	if (Input::Conclusion(Input::Type::NEXT)) {
-		if (m_SelectedGraph == SELECTABLE_GRAPH_TYPE_START) {
-			// プレイシーンへ
-			SceneBace::g_scene_ID = Play_Scene;
-		}
-		else if (m_SelectedGraph == SELECTABLE_GRAPH_TYPE_END) {
-			// ゲームを終了する
-			exit(0); // プログラムを終了
+	if (m_LogoBoundCnt == LOGO_JUMP_NUM) {
+		if (Input::Conclusion(Input::Type::NEXT) && m_LogoBoundCnt == LOGO_JUMP_NUM) {
+			if (m_SelectedGraph == SELECTABLE_GRAPH_TYPE_START) {
+				// プレイシーンへ
+				SceneBace::g_scene_ID = Play_Scene;
+			}
+			else if (m_SelectedGraph == SELECTABLE_GRAPH_TYPE_END) {
+				// ゲームを終了する
+				exit(0); // プログラムを終了
+			}
 		}
 	}
 
@@ -151,8 +155,9 @@ void SceneTitle::Step()
 		m_LogoYSpeed += LOGO_JUMP_GRAVITY;
 	}
 
-	if (m_LogoPos[1] < -64) {
+	if (m_LogoPos[1] < -128&& !m_isOffscreenBeen) {
 		m_isOffscreenBeen = true;
+		m_LogoPos[1] = -640;
 	}
 
 	if (m_LogoBoundCnt < LOGO_JUMP_NUM) {
@@ -175,28 +180,32 @@ void SceneTitle::Draw()
 		{BUTTON_POS[SELECTABLE_GRAPH_TYPE_END][0] ,BUTTON_POS[SELECTABLE_GRAPH_TYPE_END][1]},
 	};
 
-	// 選択画像
-	DrawRotaGraph(HALF_SCREEN_SIZE_X, ButtonPos1[m_SelectedGraph][1], m_ButtonExRate[m_SelectedGraph], 0.0f, m_Hndl[GRAPH_TYPE_LOGOGB], true);
-	
-	// ボタン描画
-	for (int GraphIndex = 0; GraphIndex < SELECTABLE_GRAPH_TYPE_NUM; GraphIndex++) {
-		DrawRotaGraph(HALF_SCREEN_SIZE_X, ButtonPos1[GraphIndex][1], m_ButtonExRate[GraphIndex], 0.0f, m_Hndl[GRAPH_TYPE_START + GraphIndex], true);
-	}
-
 	// いったん文字表示
 	int logopos[2] = { static_cast<int>(m_LogoPos[0]), static_cast<int>(m_LogoPos[1]) };
 
 	DebugString* dbgstr = DebugString::GetInstance();
 	if (!m_isOffscreenBeen) {
-		DrawRotaGraph(logopos[0], logopos[1] + 32, 1.5f, 0.0f, m_Hndl[GRAPH_TYPE_COUNT1 + m_LogoBoundCnt], true);
+		//DrawRotaGraph(logopos[0], logopos[1] + 32, 1.5f, 0.0f, m_Hndl[GRAPH_TYPE_COUNT1 + m_LogoBoundCnt], true);
 	}
 	else {
 		string str = TITLE_NAME;
 		int length = str.length();
-		dbgstr->AddFormatString(logopos[0] - 16 * length, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%s", TITLE_NAME);
+		//dbgstr->AddFormatString(logopos[0] - 16 * length, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%s", TITLE_NAME);
+		DrawGraph(logopos[0]-370, logopos[1]-64, m_Hndl[GRAPH_TYPE_TITLELOGO], true);
 	}
 
-	if (m_LogoBoundCnt < LOGO_JUMP_NUM) {
+	// ボタン描画
+	if (m_isOffscreenBeen) {
+		// 選択画像
+		DrawRotaGraph(HALF_SCREEN_SIZE_X, logopos[1] + 280 + 192 * m_SelectedGraph, m_ButtonExRate[m_SelectedGraph], 0.0f, m_Hndl[GRAPH_TYPE_LOGOGB], true);
+		for (int GraphIndex = 0; GraphIndex < SELECTABLE_GRAPH_TYPE_NUM; GraphIndex++) {
+			DrawRotaGraph(HALF_SCREEN_SIZE_X, logopos[1] + 280 + 192 * GraphIndex, m_ButtonExRate[GraphIndex], 0.0f, m_Hndl[GRAPH_TYPE_START + GraphIndex], true);
+		}
+		//DrawGraph(HALF_SCREEN_SIZE_X - 16, static_cast<int>(TITLE_Y_POS_LOWER_LIMIT) + 64, m_Hndl[GRAPH_TYPE_JUMP1 + m_LogoBoundCnt], true);
+	}
+
+	if (m_LogoBoundCnt < LOGO_JUMP_NUM&& !m_isOffscreenBeen) {
+		DrawRotaGraph(logopos[0], logopos[1] + 32, 1.5f, 0.0f, m_Hndl[GRAPH_TYPE_COUNT1 + m_LogoBoundCnt], true);
 		DrawGraph(HALF_SCREEN_SIZE_X - 16, static_cast<int>(TITLE_Y_POS_LOWER_LIMIT) + 64, m_Hndl[GRAPH_TYPE_JUMP1 + m_LogoBoundCnt], true);
 	}
 }

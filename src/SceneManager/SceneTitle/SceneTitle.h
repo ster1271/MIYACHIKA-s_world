@@ -1,6 +1,5 @@
 #pragma once
 #include "../SceneBace/SceneBace.h"
-
 class SceneTitle :public SceneBace
 {
 public:
