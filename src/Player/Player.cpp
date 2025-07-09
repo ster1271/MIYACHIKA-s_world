@@ -259,6 +259,9 @@ void CPlayer::HitGoal(float fStartPosX, float fStartPosY)
 	m_fPosX = fStartPosX;
 	m_fPosY = fStartPosY;
 
+	m_fSpeed = 0.0f;
+	m_fYSpeed = 0.0f;
+
 	// ƒNƒŠƒA”‚ð‰ÁŽZ
 	CPlayerData::GetInstance()->AddClearStage();
 }
