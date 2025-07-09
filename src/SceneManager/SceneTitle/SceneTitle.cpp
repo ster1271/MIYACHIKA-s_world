@@ -81,6 +81,9 @@ void SceneTitle::Init()
 		if (m_Hndl[i] != -1)continue;
 		m_Hndl[i] = LoadGraph(GRAPH_PATH[i]);
 	}
+
+	m_TitleRogoExRate = 0.0f;
+	m_TitleRogoExRateUp = true;
 }
 
 void SceneTitle::Step()
@@ -89,6 +92,19 @@ void SceneTitle::Step()
 	//DebugString* dbgStr = DebugString::GetInstance();
 	//dbgStr->AddString(0, 0, FontType::HGP創英角ポップ体24, WHITE, "タイトルです");
 	//dbgStr->AddString(0, 24, FontType::HGP創英角ポップ体24, WHITE, "左クリックもしくはコントローラ×ボタンでプレイに");
+
+	if (m_TitleRogoExRateUp) {
+		m_TitleRogoExRate += 0.01f;
+		if (m_TitleRogoExRate > 0.5f) {
+			m_TitleRogoExRateUp = false;
+		}
+	}
+	else {
+		m_TitleRogoExRate -= 0.01f;
+		if (m_TitleRogoExRate < -0.5f) {
+			m_TitleRogoExRateUp = true;
+		}
+	}
 
 	//上下で選択を変える
 	if (m_LogoBoundCnt == LOGO_JUMP_NUM) {
@@ -191,7 +207,10 @@ void SceneTitle::Draw()
 		string str = TITLE_NAME;
 		int length = str.length();
 		//dbgstr->AddFormatString(logopos[0] - 16 * length, logopos[1], FontType::HGP創英角ポップ体64_20, WHITE, "%s", TITLE_NAME);
-		DrawGraph(logopos[0]-370, logopos[1]-64, m_Hndl[GRAPH_TYPE_TITLELOGO], true);
+		//DrawGraph(logopos[0]-370, logopos[1]-64, m_Hndl[GRAPH_TYPE_TITLELOGO], true);
+
+	//	DrawRotaGraph3(logopos[0]-370, logopos[1] - 64, logopos[0] - 370+768/2, logopos[1] - 64+128, 1.0f+ m_TitleRogoExRate, 1.0f- m_TitleRogoExRate, 0.0f, m_Hndl[GRAPH_TYPE_TITLELOGO], true);
+		DrawRotaGraph3(logopos[0], logopos[1] - 256, 768/2, 128, 1.0f + m_TitleRogoExRate, 1.0f - m_TitleRogoExRate, 0.0f, m_Hndl[GRAPH_TYPE_TITLELOGO], true);
 	}
 
 	// ボタン描画
@@ -208,6 +227,9 @@ void SceneTitle::Draw()
 		DrawRotaGraph(logopos[0], logopos[1] + 32, 1.5f, 0.0f, m_Hndl[GRAPH_TYPE_COUNT1 + m_LogoBoundCnt], true);
 		DrawGraph(HALF_SCREEN_SIZE_X - 16, static_cast<int>(TITLE_Y_POS_LOWER_LIMIT) + 64, m_Hndl[GRAPH_TYPE_JUMP1 + m_LogoBoundCnt], true);
 	}
+
+	//DrawRotaGraph3(HALF_SCREEN_SIZE_X/2, HALF_SCREEN_SIZE_Y, 0, 0,
+	//	0.8f, 1.2f, 0.0f, m_Hndl[GRAPH_TYPE_TITLELOGO], true);
 }
 void SceneTitle::Fin()
 {

@@ -50,6 +50,9 @@ private:
 	double m_ButtonExRate[SELECTABLE_GRAPH_TYPE_NUM];
 	bool m_isButtonChangedExRate;
 
+	double m_TitleRogoExRate;
+	bool m_TitleRogoExRateUp;
+
 
 	// ‘I‘ð’†‰æ‘œ
 	SELECTABLE_GRAPH_TYPE m_SelectedGraph;
