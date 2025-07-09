@@ -86,7 +86,9 @@ bool CMap::LoadMap(int Index)
 			tmpInfo.cPos = VGet(BASE_VALUE_X + (float)FileIndexX * MAP_TIP_SIZE.x, BASE_VALUE_Y + (float)FileIndexY * MAP_TIP_SIZE.y, MAP_TIP_SIZE.z);
 			tmpInfo.cRotate = VGet(0.0f, 0.0f, 0.0f);
 			tmpInfo.Type_Id = (MAPTIP_TYPE)FileNum;
-			tmpInfo.iHndl = LoadGraph(MapTipFilePath[FileNum]);
+			tmpInfo.iHndl = -1;
+			if (tmpInfo.Type_Id >= 0)
+				tmpInfo.iHndl = LoadGraph(MapTipFilePath[FileNum]);
 
 			if (tmpInfo.Type_Id == MAPTIP_TYPE_05)
 			{
