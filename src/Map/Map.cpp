@@ -54,7 +54,7 @@ void CMap::Draw()
 	for (int MapIndex = 0; MapIndex != MapTipList.size(); MapIndex++)
 	{
 		DrawGraph(MapTipList[MapIndex].cPos.x, MapTipList[MapIndex].cPos.y,
-			MapTipList[MapIndex].iHndl, false);
+			MapTipList[MapIndex].iHndl, true);
 	}
 }
 
