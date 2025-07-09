@@ -1,12 +1,16 @@
 #include "Map.h"
 
+int CMap::MapID;
+
 const char MAP_DATA_NEME_PATH[MAX_LEN] = { "data/Bloak/MapDataTextName.txt" };	//マップの名前格納テキスト
 
 //コンストラクタ
 CMap::CMap()
 {
+	MapID = MAP_TYPE_00;
 	fp = nullptr;
 	MapTipList.clear();
+	memset(&cStartPos, 0, sizeof(VECTOR));
 }
 
 //デストラクタ

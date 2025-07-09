@@ -10,7 +10,7 @@ void ScenePlay::Init()
 	cCreateMap.Init();
 	cCreateMap.Load();
 	cMap.Init();
-	cMap.Load(MAP_TYPE_00);
+	cMap.Load(CMap::MapID);
 	cPlayer.Init(cMap.GetStartPos());
 }
 

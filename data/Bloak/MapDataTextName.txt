@@ -1,7 +1,4 @@
 TestMap01.txt
 Oda1.txt
 Oda2.txt
-Oda2.txt
-Oda2.txt
-Oda2.txt
 hyakudomi04.txt

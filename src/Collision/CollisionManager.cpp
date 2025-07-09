@@ -1,5 +1,6 @@
 #include "Collision.h"
 #include "CollisionManager.h"
+#include "../SceneManager/SceneBace/SceneBace.h"
 
 // プレイヤーとマップとの当たり判定
 void CollisionManager::CheckHitPlayerToMap(CPlayer& cPlayer, CMap& cMap)
@@ -185,12 +186,14 @@ void CollisionManager::CheckHitPlayerToThorn(CPlayer& cPlayer, CMap& cMap)
 		float PlayerPosX, PlayerPosY, PlayerOldPosX, PlayerOldPosY, PlayerSize;
 		VECTOR MapPos, StartPos, MapSIze;
 
-		PlayerPosX = cPlayer.GetPosX();
-		PlayerPosY = cPlayer.GetPosY();
+		float num = 20.0f;
+
+		PlayerPosX = cPlayer.GetPosX() + (num / 2);
+		PlayerPosY = cPlayer.GetPosY() + (num / 2);
 		MapPos = cMap.GetPos(MapTipIndex);
 		StartPos = cMap.GetStartPos();
 
-		PlayerSize = cPlayer.GetSize();
+		PlayerSize = cPlayer.GetSize() - num;
 		MapSIze = MAP_TIP_SIZE;
 
 		if (cMap.GetTypeID(MapTipIndex) == MAPTIP_TYPE_04)
@@ -210,7 +213,7 @@ void CollisionManager::CheckHitPlayerToGoal(CPlayer& cPlayer, CMap& cMap)
 {
 	for (int MapTipIndex = 0; MapTipIndex != cMap.GetMapTipNum(); MapTipIndex++)
 	{
-		float PlayerPosX, PlayerPosY, PlayerOldPosX, PlayerOldPosY, PlayerSize;
+		float PlayerPosX, PlayerPosY, PlayerSize;
 		VECTOR MapPos, StartPos, MapSIze;
 
 		PlayerPosX = cPlayer.GetPosX();
@@ -227,8 +230,14 @@ void CollisionManager::CheckHitPlayerToGoal(CPlayer& cPlayer, CMap& cMap)
 				(int)MapPos.x, (int)MapPos.y, (int)MapSIze.x, (int)MapSIze.y))
 			{
 				cMap.Exit();
-				int RandumNum = GetRand(MAP_TYPE_02);
-				cMap.LoadMap(RandumNum);
+				CMap::MapID += 1;
+
+				if (CMap::MapID == MAP_MAX_NUM)
+				{
+					SceneBace::g_scene_ID = Clear_Scene;
+				}
+
+				cMap.LoadMap(CMap::MapID);
 
 				StartPos = cMap.GetStartPos();
 				cPlayer.HitGoal(StartPos.x, StartPos.y);

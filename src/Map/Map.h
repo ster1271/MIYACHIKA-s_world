@@ -20,6 +20,7 @@ enum MAP_TYPE
 	MAP_TYPE_00,		//ステージ0
 	MAP_TYPE_01,		//ステージ1
 	MAP_TYPE_02,		//ステージ2
+	MAP_TYPE_03,		//ステージ3
 
 	MAP_MAX_NUM,		//ステージ最大数
 };
@@ -57,6 +58,8 @@ static const char MapTipFilePath[MAPTIP_TYPE_NUM][256]
 class CMap
 {
 public:
+	static int MapID;
+
 	FILE* fp;
 	string Path;
 
