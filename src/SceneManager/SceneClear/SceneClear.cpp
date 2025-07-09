@@ -23,10 +23,10 @@ constexpr int GOAL_POS[GOAL_NUM][2] = {
 //マップ素材データのファイルパス
 static const char GRAPH_PATH[SceneClear::GRAPH_TYPE_NUM][256]
 {
-	"data/Clear/Clear.png",
+	"data/Clear/BG.png",
 	"data/Bloak/Block.png",
 	"data/Bloak/Thorn.png",
-	"data/Clear/Goal.png",
+	//"data/Clear/BG.png",
 };
 
 void SceneClear::Init()
