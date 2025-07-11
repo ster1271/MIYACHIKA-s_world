@@ -34,6 +34,7 @@ private:
 	float m_fSpeed;		// 速度
 	float m_fYSpeed;	// Y軸加速度
 	int m_iDelayCnt;	// ディレイカウント
+	int secount;        //SE再生回数
 
 	// プレイヤーのどの方向に進んでいるか
 	bool m_bDir[PLAYER_DIRECTION_NUM];

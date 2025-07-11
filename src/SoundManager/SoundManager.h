@@ -4,11 +4,11 @@
 enum class SoundKind
 {
 	NONE=-1,
-	THREECOUNT,
-	ATTACK,
-	BILD,
-	BREAK,
-	CLICK,
+	JANP,
+	JANPBLOAK,
+	LANDING,
+	POTAL,
+	THORN,
 	MOVECURSOR,
 	PAWERUP,
 	BATTLE,
@@ -18,11 +18,11 @@ enum class SoundKind
 
 constexpr char SE_FILE_PATH[(int)SoundKind::KindNum][256] =
 {
-	"Data/Sound/3Count.mp3",
-	"Data/Sound/Attack.mp3",
-	"Data/Sound/Bild.mp3",
-	"Data/Sound/Break.mp3",
-	"Data/Sound/Click.mp3",
+	"Data/Sound/se_janp.wav",
+	"Data/Sound/se_janpbloak.wav",
+	"Data/Sound/se_landing.wav",
+	"Data/Sound/se_potal.wav",
+	"Data/Sound/se_thorn.wav",
 	"Data/Sound/MoveCursor.mp3",
 	"Data/Sound/PawerUp.mp3",
 	"Data/Sound/Battle.mp3"
