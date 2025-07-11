@@ -12,6 +12,8 @@ private:
 
 	int MapTipData[MAX_MAPTIP_Y][MAX_MAPTIP_X];	//全体マップ番号格納用
 	int SetBlockNum;							//選択ブロック番号
+	bool IsSetStart;							//スタートをセットしかどうか
+	bool IsSetGoal;								//ゴールをセットしかどうか
 
 	bool IsEditer;								//エディター中かどうか
 	bool In_Entry;								//入力中かどうか
