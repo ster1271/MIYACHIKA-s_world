@@ -256,14 +256,11 @@ void CreateMap::EraseBlock()
 				if (CreateMap::WithinBox(MouseX, MouseY, VGet((float)BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, (float)BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, 0.0f),
 					MAP_TIP_SIZE.x, MAP_TIP_SIZE.x)) 
 				{
-					int A = -1;
-					A = MapTipData[IndexY][IndexX];
-
-					if (A == MAPTIP_TYPE_05)
+					if (MapTipData[IndexY][IndexX] == MAPTIP_TYPE_05)
 					{
 						IsSetStart = false;
 					}
-					else if (A == MAPTIP_TYPE_06)
+					else if (MapTipData[IndexY][IndexX] == MAPTIP_TYPE_06)
 					{
 						IsSetGoal = false;
 					}
