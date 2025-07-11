@@ -259,6 +259,9 @@ void CPlayer::HitThorn(float fStartPosX, float fStartPosY)
 	SoundManager::Play(SoundKind::THORN);  //‚Æ‚°SE
 	SoundManager::Play(SoundKind::POTAL);
 
+	m_fSpeed = 0.0f;
+	m_fYSpeed = 0.0f;
+
 	// Ž€–S”‚ð‰ÁŽZ
 	CPlayerData::GetInstance()->AddDeathCnt();
 }
