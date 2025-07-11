@@ -2,6 +2,7 @@
 #include "../Common.h"
 #include "../Input/Input.h"
 #include "PlayerData.h"
+#include "../SoundManager/SoundManager.h"
 
 
 //==================================================
@@ -35,6 +36,7 @@ CPlayer::CPlayer()
 	m_fSpeed = 0.0f;
 	m_fYSpeed = 0.0f;
 	m_iDelayCnt = 0;
+	secount = 0;
 
 	for (int i = 0; i < PLAYER_DIRECTION_NUM; i++)
 	{
@@ -220,6 +222,10 @@ void CPlayer::HitLowerSide()
 	{
 		// 前を向く
 		cAnimation.ChangeID(PLAYER_STATE::FRONT);
+		secount++;
+		if (secount <= 1) {
+			SoundManager::Play(SoundKind::LANDING);
+		}
 	}
 }
 
@@ -230,6 +236,9 @@ void CPlayer::HitJumpBlock(PLAYER_JUMP_POWER JumpPower)
 	m_fYSpeed = -MAX_JUMP_Y[m_eJumpPower];
 	cAnimation.ChangeID(PLAYER_STATE::JUMP);
 	m_iDelayCnt = 0;
+	secount = 0;
+	SoundManager::Play(SoundKind::JANP);
+	SoundManager::Play(SoundKind::JANPBLOAK);
 
 	// ジャンプ数を加算
 	CPlayerData::GetInstance()->AddJumpCnt();
@@ -247,6 +256,11 @@ void CPlayer::HitThorn(float fStartPosX, float fStartPosY)
 	// スタート位置に戻す
 	m_fPosX = fStartPosX;
 	m_fPosY = fStartPosY;
+	SoundManager::Play(SoundKind::THORN);
+	SoundManager::Play(SoundKind::POTAL);
+
+	m_fSpeed = 0.0f;
+	m_fYSpeed = 0.0f;
 
 	// 死亡数を加算
 	CPlayerData::GetInstance()->AddDeathCnt();
@@ -261,6 +275,8 @@ void CPlayer::HitGoal(float fStartPosX, float fStartPosY)
 
 	m_fSpeed = 0.0f;
 	m_fYSpeed = 0.0f;
+	secount = 0;
+	SoundManager::Play(SoundKind::POTAL);
 
 	// クリア数を加算
 	CPlayerData::GetInstance()->AddClearStage();
