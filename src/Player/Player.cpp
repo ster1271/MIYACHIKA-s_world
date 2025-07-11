@@ -224,7 +224,7 @@ void CPlayer::HitLowerSide()
 		cAnimation.ChangeID(PLAYER_STATE::FRONT);
 		secount++;
 		if (secount <= 1) {
-			SoundManager::Play(SoundKind::LANDING);
+			SoundManager::Play(SoundKind::LANDING);  //着地SE
 		}
 	}
 }
@@ -237,8 +237,8 @@ void CPlayer::HitJumpBlock(PLAYER_JUMP_POWER JumpPower)
 	cAnimation.ChangeID(PLAYER_STATE::JUMP);
 	m_iDelayCnt = 0;
 	secount = 0;
-	SoundManager::Play(SoundKind::JANP);
-	SoundManager::Play(SoundKind::JANPBLOAK);
+	SoundManager::Play(SoundKind::JANP);       //ジャンプSE
+	SoundManager::Play(SoundKind::JANPBLOAK);  //ジャンプブロックSE
 
 	// ジャンプ数を加算
 	CPlayerData::GetInstance()->AddJumpCnt();
@@ -256,7 +256,7 @@ void CPlayer::HitThorn(float fStartPosX, float fStartPosY)
 	// スタート位置に戻す
 	m_fPosX = fStartPosX;
 	m_fPosY = fStartPosY;
-	SoundManager::Play(SoundKind::THORN);
+	SoundManager::Play(SoundKind::THORN);  //とげSE
 	SoundManager::Play(SoundKind::POTAL);
 
 	// 死亡数を加算

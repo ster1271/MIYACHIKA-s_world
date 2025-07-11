@@ -4,6 +4,7 @@
 #include "SceneManager.h"
 #include "ScenePlay/ScenePlay.h"
 #include "SceneTitle/SceneTitle.h"
+#include "../SoundManager/SoundManager.h"
 
 int SceneBace::g_scene_ID;
 
@@ -43,6 +44,7 @@ void SceneManager::Main()
 		}
 		scene = new ScenePlay;
 		scene->Init();
+		SoundManager::Play(SoundKind::PLAY_BGM, DX_PLAYTYPE_LOOP); //ƒvƒŒƒC‰æ–Ê—pBGM
 		SceneBace::g_scene_ID = Loop_Scene;
 		break;
 	}

@@ -4,6 +4,7 @@
 enum class SoundKind
 {
 	NONE=-1,
+	PLAY_BGM,
 	JANP,
 	JANPBLOAK,
 	LANDING,
@@ -18,6 +19,7 @@ enum class SoundKind
 
 constexpr char SE_FILE_PATH[(int)SoundKind::KindNum][256] =
 {
+	"Data/Sound/PLAY_BGM.wav",
 	"Data/Sound/se_janp.wav",
 	"Data/Sound/se_janpbloak.wav",
 	"Data/Sound/se_landing.wav",
