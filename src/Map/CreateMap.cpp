@@ -25,6 +25,8 @@ CreateMap::CreateMap()
 	}
 
 	SetBlockNum = -1;
+	IsSetStart = false;
+	IsSetGoal = false;
 	IsEditer = false;
 	In_Entry = false;
 	IsFinish = false;
@@ -53,6 +55,8 @@ void CreateMap::Init()
 	}
 
 	SetBlockNum = -1;
+	IsSetStart = false;
+	IsSetGoal = false;
 	IsEditer = false;
 	In_Entry = false;
 	IsFinish = false;
@@ -78,6 +82,8 @@ void CreateMap::Exit()
 	}
 
 	SetBlockNum = -1;
+	IsSetStart = false;
+	IsSetGoal = false;
 	IsEditer = false;
 	In_Entry = false;
 	IsFinish = false;
@@ -111,28 +117,28 @@ void CreateMap::Draw()
 				continue;
 
 			//設置したブロック
-			DrawGraph(BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, DataHndl[MapTipData[IndexY][IndexX]], false);
+			DrawGraph(BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, DataHndl[MapTipData[IndexY][IndexX]], true);
 		}
 	}
 
 	//消しゴム描画
-	DrawRotaGraph(70, 150, 1.5f, -DX_PI_F / 4, EraseHndl, false, false);
+	DrawRotaGraph(70, 150, 1.5f, -DX_PI_F / 4, EraseHndl, true, false);
 	for (int Index = 0; Index < MAPTIP_TYPE_NUM; Index++)
 	{
 		//選択用ブロックの描画
-		DrawRotaGraph(70, 210 + 60 * Index, 1.5f, 0.0f, DataHndl[Index], false, false);
+		DrawRotaGraph(70, 210 + 60 * Index, 1.5f, 0.0f, DataHndl[Index], true, false);
 	}
 
 	//マウスに追従と選択ブロック描画
 	if (SetBlockNum == -1)
 	{
-		DrawRotaGraph(650, 35, 1.5f, -DX_PI_F / 4, EraseHndl, false, false);
-		DrawRotaGraph(MouseX + 5, MouseY + 5, 1.0f, -DX_PI_F / 4, EraseHndl, false, false);
+		DrawRotaGraph(650, 35, 1.5f, -DX_PI_F / 4, EraseHndl, true, false);
+		DrawRotaGraph(MouseX + 5, MouseY + 5, 1.0f, -DX_PI_F / 4, EraseHndl, true, false);
 	}
 	else
 	{
-		DrawRotaGraph(650 , 35, 1.5f, 0.0f, DataHndl[SetBlockNum], false, false);
-		DrawRotaGraph(MouseX, MouseY, 1.0f, 0.0f, DataHndl[SetBlockNum], false, false);
+		DrawRotaGraph(650 , 35, 1.5f, 0.0f, DataHndl[SetBlockNum], true, false);
+		DrawRotaGraph(MouseX, MouseY, 1.0f, 0.0f, DataHndl[SetBlockNum], true, false);
 	}
 }
 
@@ -195,7 +201,11 @@ void CreateMap::SelectBlock()
 void CreateMap::SetBlock()
 {
 	if (Input::Mouse::Keep(MOUSE_INPUT_LEFT))
-	{
+	{	
+		//選択ブロックが消しゴムなら処理しない
+		if (SetBlockNum == MAPTIP_TYPE_NONE)
+			return;
+
 		for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
 		{
 			for (int IndexX = 0; IndexX < MAX_MAPTIP_X; IndexX++)
@@ -204,7 +214,24 @@ void CreateMap::SetBlock()
 				if (CreateMap::WithinBox(MouseX, MouseY, VGet((float)BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, (float)BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, 0.0f),
 					MAP_TIP_SIZE.x, MAP_TIP_SIZE.x))
 				{
+
+					//スタートとゴールは1個以上設置できないようにする
+					if (IsSetStart && SetBlockNum == MAPTIP_TYPE_05 || 
+						IsSetGoal && SetBlockNum == MAPTIP_TYPE_06)
+						break;
+
 					MapTipData[IndexY][IndexX] = SetBlockNum;
+
+					//スタートかゴールを設置でフラグをtrueにする
+					if (!IsSetStart && SetBlockNum == MAPTIP_TYPE_05)
+					{
+						IsSetStart = true;
+					}
+					else if(!IsSetGoal && SetBlockNum == MAPTIP_TYPE_06)
+					{
+						IsSetGoal = true;
+					}
+					return;
 				}
 			}
 		}
@@ -218,7 +245,7 @@ void CreateMap::EraseBlock()
 	if (Input::Mouse::Keep(MOUSE_INPUT_LEFT))
 	{
 		//選択ブロックが消しゴムじゃないなら処理しない
-		if (SetBlockNum != -1)
+		if (SetBlockNum != MAPTIP_TYPE_NONE)
 			return;
 
 		for (int IndexY = 0; IndexY < MAX_MAPTIP_Y; IndexY++)
@@ -229,6 +256,15 @@ void CreateMap::EraseBlock()
 				if (CreateMap::WithinBox(MouseX, MouseY, VGet((float)BASE_VALUE_X + IndexX * MAP_TIP_SIZE.x, (float)BASE_VALUE_Y + IndexY * MAP_TIP_SIZE.y, 0.0f),
 					MAP_TIP_SIZE.x, MAP_TIP_SIZE.x)) 
 				{
+					if (MapTipData[IndexY][IndexX] == MAPTIP_TYPE_05)
+					{
+						IsSetStart = false;
+					}
+					else if (MapTipData[IndexY][IndexX] == MAPTIP_TYPE_06)
+					{
+						IsSetGoal = false;
+					}
+
 					MapTipData[IndexY][IndexX] = -1;
 				}
 			}
