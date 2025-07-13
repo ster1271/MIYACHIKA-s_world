@@ -72,6 +72,7 @@ void ScenePlay::Fin()
 	cCreateMap.Exit();
 	cMap.Exit();
 	cPlayer.Fin();
+	SoundManager::StopAll();
 }
 
 void ScenePlay::Collision()

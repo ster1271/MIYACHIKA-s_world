@@ -87,7 +87,7 @@ void CPlayer::Fin()
 	m_fYSpeed = 0.0f;
 
 	cAnimation.Fin();
-	CPlayerData::DeleteInstance();
+	//CPlayerData::DeleteInstance();
 }
 
 // XVˆ—
